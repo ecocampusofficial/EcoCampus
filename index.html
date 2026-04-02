@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCampus</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌿 EcoCampus</h1>
+    <p id="status">Checking authentication...</p>
+
+    <div id="auth-actions"></div>
+
+    <div class="apps">
+        <div class="card" onclick="openApp('/ecovities/')">
+            <h3>EcoVities</h3>
+            <p>Main eco app</p>
+        </div>
+
+        <div class="card" onclick="openApp('/store/')">
+            <h3>Store</h3>
+            <p>Redeem rewards</p>
+        </div>
+
+        <div class="card" onclick="openApp('/events/')">
+            <h3>Events</h3>
+            <p>Join activities</p>
+        </div>
+    </div>
+</div>
+
+<!-- JS -->
+<script src="main.js"></script>
+
+</body>
+</html>
