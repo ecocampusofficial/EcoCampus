@@ -1,11 +1,6 @@
-// 🔐 AUTH PROJECT CONFIG
-const SUPABASE_URL = "https://YOUR_AUTH_PROJECT.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
+// main.js
 
-const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
+const supabase = window.supabaseClient;
 
 let currentSession = null;
 
@@ -30,7 +25,7 @@ async function checkAuth() {
     }
 }
 
-// 🔐 Go to login
+// 🔐 Login redirect
 function goLogin() {
     window.location.href = "/auth/login.html?redirect=/";
 }
@@ -41,7 +36,7 @@ async function logout() {
     location.reload();
 }
 
-// 📦 Open app
+// 📦 Open apps
 function openApp(path) {
     if (!currentSession) {
         window.location.href = "/auth/login.html?redirect=" + path;
@@ -51,5 +46,5 @@ function openApp(path) {
     window.location.href = path;
 }
 
-// Run on load
+// run
 checkAuth();
