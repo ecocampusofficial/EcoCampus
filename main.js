@@ -1,12 +1,18 @@
 // main.js
 
-const supabase = window.supabaseClient; 
+const supabase = window.sb;
 
 let currentSession = null;
 
 // ✅ Check Auth
 async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session }, error } = await supabase.auth.getSession();
+
+    if (error) {
+        document.getElementById("status").innerText = "Error checking auth";
+        console.error(error);
+        return;
+    }
 
     currentSession = session;
 
@@ -25,7 +31,7 @@ async function checkAuth() {
     }
 }
 
-// 🔐 Login redirect
+// 🔐 Go to login
 function goLogin() {
     window.location.href = "/auth/login.html?redirect=/";
 }
@@ -36,7 +42,7 @@ async function logout() {
     location.reload();
 }
 
-// 📦 Open apps
+// 📦 Open app
 function openApp(path) {
     if (!currentSession) {
         window.location.href = "/auth/login.html?redirect=" + path;
@@ -46,5 +52,5 @@ function openApp(path) {
     window.location.href = path;
 }
 
-// run
+// Run on load
 checkAuth();
