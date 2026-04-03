@@ -1,6 +1,6 @@
 // main.js
 
-const supabase = window.supabaseClient;
+const supabase = window.supabaseClient; 
 
 let currentSession = null;
 
