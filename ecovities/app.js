@@ -1,4 +1,5 @@
-import { supabase } from './supabase-client.js';
+import { supabase } from './supabase-client.js'; // EcoVities DB
+import { authClient } from './auth-client.js';   // Auth project
 import { state } from './state.js';
 import { els, toggleSidebar, showPage } from './utils.js';
 import { loadDashboardData, renderDashboard, setupFileUploads, loadHistoryData } from './dashboard.js';
@@ -10,7 +11,7 @@ import { loadEventsData } from './events.js';
 // Auth
 const checkAuth = async () => {
     try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const { data: { session }, error } = await authClient.auth.getSession();
         if (error) { console.error('Session Error:', error.message); redirectToLogin(); return; }
         if (!session) { console.log('No active session.'); redirectToLogin(); return; }
         state.userAuth = session.user;
@@ -48,7 +49,7 @@ const initializeApp = async () => {
 
 const handleLogout = async () => {
     try {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await authClient.auth.signOut();
         if (error) console.error('Logout error:', error.message);
         redirectToLogin();
     } catch (err) { console.error('Logout Error:', err); }
