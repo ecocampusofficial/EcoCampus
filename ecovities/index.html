@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EcoVities</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+
+  <h1 class="text-3xl font-bold text-green-600 mb-4">EcoVities</h1>
+
+  <p id="status" class="mb-4">Checking authentication...</p>
+
+  <!-- User Info -->
+  <div id="user-card" class="bg-white p-4 rounded shadow hidden">
+    <h2 class="text-xl font-semibold" id="name"></h2>
+    <p>Email: <span id="email"></span></p>
+    <p>Student ID: <span id="student_id"></span></p>
+    <p>Points: <span id="points"></span></p>
+  </div>
+
+  <!-- Logout -->
+  <button onclick="logout()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
+    Logout
+  </button>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase.js"></script>
+  <script src="ecovities.js"></script>
+
+</body>
+</html>
