@@ -1,55 +1,60 @@
 // auth/login.js
 
-// ✅ use shared supabase client
-const supabase = window.sb;
+// ✅ use shared Supabase client
+const sb = window.sb;
 
 // DOM elements
 let loginForm;
 let loginButton;
 let authMessage;
 
-// 🔔 show message
+// 🔔 Show message
 function showMessage(message, isError = true) {
     if (!authMessage) return;
 
     authMessage.textContent = message;
     authMessage.className = isError
-        ? 'text-red-500 text-sm text-center mb-4 h-5'
-        : 'text-green-500 text-sm text-center mb-4 h-5';
+        ? "text-red-500 text-sm text-center mb-4 h-5"
+        : "text-green-500 text-sm text-center mb-4 h-5";
 }
 
-// ⏳ loading state
+// ⏳ Button loading state
 function setLoading(button, isLoading) {
     if (!button) return;
 
-    const btnText = button.querySelector('.btn-text');
-    const loader = button.querySelector('i');
+    const btnText = button.querySelector(".btn-text");
+    const loader = button.querySelector("span:last-child");
 
     if (isLoading) {
         button.disabled = true;
-        if (btnText) btnText.classList.add('hidden');
-        if (loader) loader.classList.remove('hidden');
+        if (btnText) btnText.classList.add("hidden");
+        if (loader) loader.classList.remove("hidden");
     } else {
         button.disabled = false;
-        if (btnText) btnText.classList.remove('hidden');
-        if (loader) loader.classList.add('hidden');
+        if (btnText) btnText.classList.remove("hidden");
+        if (loader) loader.classList.add("hidden");
     }
 }
 
-// 🔐 LOGIN FUNCTION
+// 🔐 HANDLE LOGIN
 async function handleLogin(event) {
     event.preventDefault();
 
-    setLoading(loginButton, true);
-    showMessage('', false);
+    const studentId = document.getElementById("login-studentid").value.trim();
+    const password = document.getElementById("login-password").value;
 
-    const studentId = document.getElementById('login-studentid').value;
-    const password = document.getElementById('login-password').value;
+    if (!studentId || !password) {
+        showMessage("Please enter Student ID and Password");
+        return;
+    }
+
+    setLoading(loginButton, true);
+    showMessage("", false);
 
     try {
-        // 🔥 call edge function
-        const { data, error } = await supabase.functions.invoke(
-            'login-with-studentid',
+        // 🔥 Call Edge Function
+        const { data, error } = await sb.functions.invoke(
+            "login-with-studentid",
             {
                 body: { studentId, password }
             }
@@ -61,14 +66,14 @@ async function handleLogin(event) {
             return;
         }
 
-        if (data.error) {
+        if (data?.error) {
             showMessage(data.error);
             return;
         }
 
-        if (data.session) {
-            // ✅ set session
-            const { error: sessionError } = await supabase.auth.setSession(data.session);
+        if (data?.session) {
+            // ✅ Set session
+            const { error: sessionError } = await sb.auth.setSession(data.session);
 
             if (sessionError) {
                 console.error("Session error:", sessionError);
@@ -76,38 +81,48 @@ async function handleLogin(event) {
                 return;
             }
 
-            // ✅ redirect (GitHub Pages safe)
+            // 🎯 Redirect (GitHub Pages safe)
             window.location.href = "/EcoCampus/";
-        } else {
-            showMessage("Unexpected error occurred.");
+            return;
         }
 
-    } catch (err) {
-        console.error(err);
-        showMessage("Something went wrong.");
-    }
+        showMessage("Unexpected error occurred.");
 
-    setLoading(loginButton, false);
+    } catch (err) {
+        console.error("Login error:", err);
+        showMessage("Something went wrong.");
+    } finally {
+        setLoading(loginButton, false);
+    }
 }
 
-// 🔁 check if already logged in
+// 🔁 Check existing session
 async function checkUserSession() {
-    const { data } = await supabase.auth.getSession();
+    try {
+        const { data } = await sb.auth.getSession();
 
-    if (data.session) {
-        window.location.href = "/EcoCampus/";
+        if (data?.session) {
+            // already logged in → skip login page
+            window.location.href = "/EcoCampus/";
+        }
+    } catch (err) {
+        console.error("Session check error:", err);
     }
 }
 
 // 🚀 INIT
-document.addEventListener('DOMContentLoaded', () => {
-    loginForm = document.getElementById('login-form');
-    loginButton = document.getElementById('login-button');
-    authMessage = document.getElementById('auth-message');
+document.addEventListener("DOMContentLoaded", () => {
+    loginForm = document.getElementById("login-form");
+    loginButton = document.getElementById("login-button");
+    authMessage = document.getElementById("auth-message");
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
+    if (!loginForm) {
+        console.error("Login form not found!");
+        return;
     }
 
+    loginForm.addEventListener("submit", handleLogin);
+
+    // check if already logged in
     checkUserSession();
 });
