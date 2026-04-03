@@ -9,5 +9,3 @@ const supabase = window.supabase.createClient(
     SUPABASE_ANON_KEY
 );
 
-// make global
-window.supabaseClient = supabase;
