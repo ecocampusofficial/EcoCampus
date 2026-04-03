@@ -1,11 +1,14 @@
 // main.js
 
-const supabase = window.sb; // ✅ ONLY THIS
+// ❗ DO NOT create client here
+// ONLY use existing one
+
+const sb = window.sb;  // renamed to avoid conflicts
 
 let currentSession = null;
 
 async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await sb.auth.getSession();
 
     currentSession = session;
 
@@ -29,7 +32,7 @@ function goLogin() {
 }
 
 async function logout() {
-    await supabase.auth.signOut();
+    await sb.auth.signOut();
     location.reload();
 }
 
