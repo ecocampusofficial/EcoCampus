@@ -54,7 +54,7 @@ async function handleLogin(event) {
     try {
         // 🔥 Call Edge Function
         const { data, error } = await sb.functions.invoke(
-            "login-with-studentid",
+            "hyper-endpoint",
             {
                 body: { studentId, password }
             }
