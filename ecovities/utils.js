@@ -1,3 +1,4 @@
+import { supabase } from './supabase-client.js'; // 🟢 NEW: Database client for logging activity
 import { CLOUDINARY_API_URL, CLOUDINARY_UPLOAD_PRESET, TICK_IMAGES, state } from './state.js';
 import { renderDashboard } from './dashboard.js';
 import { renderRewards, renderMyRewardsPage } from './store.js';
@@ -167,6 +168,58 @@ export const toggleSidebar = (forceClose = false) => {
         els.sidebar.classList.toggle('-translate-x-full');
         els.sidebarOverlay.classList.toggle('hidden');
         els.sidebarOverlay.classList.toggle('opacity-0');
+    }
+};
+
+// --- MISSING UTILITIES FOR APP.JS ---
+
+// 1. Debounce (Prevents spam-calling search functions)
+export const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+};
+
+// 2. Show Toast (On-screen notifications)
+export const showToast = (message, type = 'success') => {
+    const toast = document.createElement('div');
+    const bgColor = type === 'error' ? 'bg-red-500' : type === 'warning' ? 'bg-orange-500' : 'bg-green-500';
+    toast.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-full text-white text-sm font-bold shadow-2xl z-[100] transition-all duration-300 opacity-0 -translate-y-5 ${bgColor}`;
+    toast.textContent = message;
+    
+    document.body.appendChild(toast);
+    
+    // Animate in
+    requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', '-translate-y-5');
+        toast.classList.add('opacity-100', 'translate-y-0');
+    });
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', '-translate-y-5');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+};
+
+// 3. Log User Activity (Saves actions to the database)
+export const logUserActivity = async (actionType, description) => {
+    if (!state.currentUser) return;
+    try {
+        await supabase.from('user_activity_log').insert({
+            user_id: state.currentUser.id,
+            action_type: actionType,
+            description: description
+        });
+    } catch (err) {
+        console.error('Activity Log Error:', err);
     }
 };
 
