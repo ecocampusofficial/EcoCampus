@@ -1,13 +1,13 @@
-// main.js
-
 const sb = window.sb; 
-
 let currentSession = null;
 
+// Initialize Lucide Icons
+function renderIcons() {
+    lucide.createIcons();
+}
+
 // Theme Initialization
-const themeToggleBtn = document.getElementById('theme-toggle');
-const themeText = document.getElementById('theme-text');
-const themeIcon = themeToggleBtn.querySelector('i');
+const themeToggles = document.querySelectorAll('.theme-toggle');
 
 function initTheme() {
     const savedTheme = localStorage.getItem('ecoCampusTheme') || 'light';
@@ -16,24 +16,29 @@ function initTheme() {
 }
 
 function updateThemeUI(theme) {
-    if (theme === 'dark') {
-        themeText.innerText = 'Light Mode';
-        themeIcon.className = 'fa-solid fa-sun';
-    } else {
-        themeText.innerText = 'Dark Mode';
-        themeIcon.className = 'fa-solid fa-moon';
-    }
+    themeToggles.forEach(btn => {
+        const textSpan = btn.querySelector('.theme-text');
+        const iconSpan = btn.querySelector('.theme-icon');
+        
+        if(textSpan) textSpan.innerText = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+        
+        // Update lucide icon attribute and re-render
+        if(iconSpan) {
+            iconSpan.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+        }
+    });
+    renderIcons();
 }
 
-themeToggleBtn.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('ecoCampusTheme', newTheme);
-    updateThemeUI(newTheme);
+themeToggles.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('ecoCampusTheme', newTheme);
+        updateThemeUI(newTheme);
+    });
 });
-
-initTheme();
 
 // Authentication and Profile Loading
 async function checkAuth() {
@@ -41,54 +46,50 @@ async function checkAuth() {
     currentSession = session;
 
     const authActions = document.getElementById("auth-actions");
-    const logoutBtn = document.getElementById("logout-btn");
+    const authRequiredElements = document.querySelectorAll(".auth-required");
     const userNameEl = document.getElementById("user-name");
 
     if (!session) {
-        userNameEl.innerText = "Guest User";
+        if(userNameEl) userNameEl.innerText = "Guest";
         document.getElementById("user-role").innerText = "Not logged in";
-        authActions.innerHTML = `<button onclick="goLogin()">Login</button>`;
-        logoutBtn.style.display = "none";
+        authActions.innerHTML = `<button class="login-btn" onclick="goLogin()">Login</button>`;
+        authRequiredElements.forEach(el => el.style.display = "none");
     } else {
-        authActions.innerHTML = ""; // Hide top login button
-        logoutBtn.style.display = "flex"; // Show sidebar logout
+        authActions.innerHTML = ""; 
+        authRequiredElements.forEach(el => el.style.display = "flex"); // Shows logout buttons & mobile points pill
         fetchUserProfile(session.user.id, session.user.email);
     }
 }
 
 async function fetchUserProfile(authUserId, fallbackEmail) {
     try {
-        // Querying the 'users' table based on auth_user_id
         const { data: userProfile, error } = await sb
             .from('users')
-            .select('full_name, profile_img_url, role, tick_type')
+            .select('full_name, profile_img_url, role')
             .eq('auth_user_id', authUserId)
             .single();
 
-        if (error) throw error;
+        // Check if error is related to infinite recursion RLS policy
+        if (error) {
+            console.error("Supabase Error:", error.message);
+            throw error; 
+        }
 
         if (userProfile) {
-            // Set Name
-            document.getElementById('user-name').innerHTML = 
-                `${userProfile.full_name || fallbackEmail} 
-                 <i class="fa-solid fa-circle-check" style="color: #1da1f2; display: ${userProfile.tick_type ? 'inline-block' : 'none'};" id="verified-tick"></i>`;
+            document.getElementById('user-name').innerText = userProfile.full_name || fallbackEmail;
             
-            // Set Image
             if (userProfile.profile_img_url) {
                 document.getElementById('profile-img').src = userProfile.profile_img_url;
             }
-
-            // Set Role
             if (userProfile.role) {
                 document.getElementById('user-role').innerText = userProfile.role;
             }
-
-            // Note: EcoPoints likely come from an orders/points table, mocking for now.
-            // You can add a second query here later to calculate sum of points.
-            document.getElementById('user-points').innerHTML = `<i class="fa-solid fa-leaf"></i> <span>0 EcoPoints</span>`;
+            
+            // You can replace '0' with actual point fetching logic here later
+            // document.getElementById('mobile-user-points').innerText = "150"; 
         }
     } catch (err) {
-        console.error("Error fetching profile:", err.message);
+        console.error("Error fetching profile. (Did you fix your RLS Policy?)", err.message);
         document.getElementById('user-name').innerText = fallbackEmail;
     }
 }
@@ -110,4 +111,9 @@ function openApp(path) {
     window.location.href = path;
 }
 
-checkAuth();
+// Initial Calls
+document.addEventListener("DOMContentLoaded", () => {
+    initTheme();
+    renderIcons();
+    checkAuth();
+});
