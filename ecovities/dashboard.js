@@ -6,10 +6,6 @@ import { refreshUserData } from './app.js';
 export const loadDashboardData = async () => {
     try {
         const userId = state.currentUser.id;
-        
-        // ✅ FIX: Use IST Date instead of UTC (toISOString)
-        // Previous code: const today = new Date().toISOString().split('T')[0]; 
-        // This caused check-ins at 1 AM IST to count for the previous day.
         const today = getTodayIST(); 
 
         const [
@@ -18,8 +14,9 @@ export const loadDashboardData = async () => {
             { data: impactData }
         ] = await Promise.all([
             supabase.from('daily_checkins').select('id').eq('user_id', userId).eq('checkin_date', today).limit(1),
-            supabase.from('user_streaks').select('current_streak').eq('user_id', userId).single(),
-            supabase.from('user_impact').select('*').eq('user_id', userId).single()
+            // 🟢 FIX: Changed .single() to .maybeSingle() to prevent 406 errors on empty tables
+            supabase.from('user_streaks').select('current_streak').eq('user_id', userId).maybeSingle(),
+            supabase.from('user_impact').select('*').eq('user_id', userId).maybeSingle()
         ]);
         
         state.currentUser.isCheckedInToday = (checkinData && checkinData.length > 0);
@@ -42,15 +39,28 @@ const renderDashboardUI = () => {
     els.userPointsHeader.textContent = user.current_points;
     els.userNameGreeting.textContent = user.full_name;
     
-    document.getElementById('user-name-sidebar').innerHTML = `${user.full_name} ${getTickImg(user.tick_type)}`;
-    document.getElementById('user-points-sidebar').textContent = user.current_points;
+    const sidebarName = document.getElementById('user-name-sidebar');
+    if (sidebarName) sidebarName.innerHTML = `${user.full_name} ${getTickImg(user.tick_type)}`;
+    
+    const sidebarPoints = document.getElementById('user-points-sidebar');
+    if (sidebarPoints) sidebarPoints.textContent = user.current_points;
+    
     const level = getUserLevel(user.lifetime_points);
-    document.getElementById('user-level-sidebar').textContent = level.title;
-    document.getElementById('user-avatar-sidebar').src = user.profile_img_url || getPlaceholderImage('80x80', getUserInitials(user.full_name));
+    const sidebarLevel = document.getElementById('user-level-sidebar');
+    if (sidebarLevel) sidebarLevel.textContent = level.title;
+    
+    const sidebarAvatar = document.getElementById('user-avatar-sidebar');
+    if (sidebarAvatar) sidebarAvatar.src = user.profile_img_url || getPlaceholderImage('80x80', getUserInitials(user.full_name));
 
-    document.getElementById('impact-recycled').textContent = `${(user.impact?.total_plastic_kg || 0).toFixed(1)} kg`;
-    document.getElementById('impact-co2').textContent = `${(user.impact?.co2_saved_kg || 0).toFixed(1)} kg`;
-    document.getElementById('impact-events').textContent = user.impact?.events_attended || 0;
+    // 🟢 FIX: Added safe checks so it doesn't crash if you remove an element from HTML
+    const impactRecycled = document.getElementById('impact-recycled');
+    if (impactRecycled) impactRecycled.textContent = `${(user.impact?.total_plastic_kg || 0).toFixed(1)} kg`;
+    
+    const impactCo2 = document.getElementById('impact-co2');
+    if (impactCo2) impactCo2.textContent = `${(user.impact?.co2_saved_kg || 0).toFixed(1)} kg`;
+    
+    const impactEvents = document.getElementById('impact-events');
+    if (impactEvents) impactEvents.textContent = user.impact?.events_attended || 0;
 };
 
 const renderCheckinButtonState = () => {
@@ -62,6 +72,8 @@ const renderCheckinButtonState = () => {
     if(postEl) postEl.textContent = streak;
     
     const btn = els.dailyCheckinBtn;
+    if (!btn) return;
+
     if (state.currentUser.isCheckedInToday) {
         btn.classList.add('checkin-completed'); 
         btn.classList.remove('from-yellow-400', 'to-orange-400', 'dark:from-yellow-500', 'dark:to-orange-500', 'bg-gradient-to-r');
@@ -82,8 +94,7 @@ export const openCheckinModal = () => {
     const calendarContainer = document.getElementById('checkin-modal-calendar');
     calendarContainer.innerHTML = '';
     
-    // ✅ FIX: Visual Calendar now centers on today's date
-    const today = new Date(); // Visuals can use local time, but logic uses IST
+    const today = new Date(); 
     
     for (let i = -3; i <= 3; i++) {
         const d = new Date(today);
@@ -119,8 +130,6 @@ export const handleDailyCheckin = async () => {
     const optimisticStreak = (state.currentUser.checkInStreak || 0) + 1;
 
     try {
-        // ✅ FIX: Explicitly send the IST Date to the database
-        // This ensures the DB row has "2025-11-23" even if the server is in UTC
         const todayIST = getTodayIST();
 
         const { error } = await supabase.from('daily_checkins').insert({ 
@@ -153,7 +162,6 @@ export const loadHistoryData = async () => {
         if (error) return;
         state.history = data.map(item => ({
             type: item.source_type, description: item.description, points: item.points_delta,
-            // ✅ FIX: Format history dates in IST
             date: formatDate(item.created_at), 
             icon: getIconForHistory(item.source_type)
         }));
