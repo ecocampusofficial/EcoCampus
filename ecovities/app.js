@@ -1,9 +1,10 @@
 /**
  * EcoCampus - Main Application Logic (app.js)
- * Final Version: Standard Dashboard State (New Year Elements Removed)
+ * Final Version: Dual-Project Architecture with Redirect Loop Fix
  */
 
-import { supabase } from './supabase-client.js';
+import { authClient } from './auth-client.js';     // 🔴 Handles Login & Sessions
+import { supabase } from './supabase-client.js';   // 🟢 Handles Database & Data
 import { state } from './state.js';
 import { els, toggleSidebar, showPage, logUserActivity, debounce, showToast } from './utils.js';
 import { loadDashboardData, renderDashboard, setupFileUploads } from './dashboard.js';
@@ -12,12 +13,13 @@ import { loadEventsData } from './events.js';
 // --- AUTHENTICATION CHECK & STARTUP ---
 
 /**
- * Checks for a valid Supabase session on startup.
+ * Checks for a valid session on startup using the Master Auth Project.
  * Redirects to login if session is missing or invalid.
  */
 const checkAuth = async () => {
     try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        // 🔴 USED AUTH-CLIENT HERE
+        const { data: { session }, error } = await authClient.auth.getSession();
         
         if (error) { 
             console.error('Auth Check: Session Error:', error.message); 
@@ -38,7 +40,6 @@ const checkAuth = async () => {
     } catch (err) { 
         console.error('CRITICAL: Auth check failed unexpectedly:', err); 
         showToast('System error. Please refresh the page.', 'error');
-        // Emergency loader removal
         const loader = document.getElementById('app-loading');
         if(loader) loader.style.display = 'none';
     }
@@ -50,28 +51,28 @@ const checkAuth = async () => {
 const initializeApp = async () => {
     try {
         console.log('Init: Fetching user profile...');
-        
-        // Console Art
         console.log("%c🌿 EcoCampus Loaded.", "color: #fbbf24; font-size: 16px; font-weight: bold; background: #064e3b; padding: 5px; border-radius: 5px;");
 
-        // Fetch specific columns to optimize bandwidth
+        // 🟢 USED SUPABASE CLIENT HERE (Fetching from EcoVities DB)
         const { data: userProfile, error } = await supabase
             .from('users')
             .select('id, full_name, student_id, course, current_points, lifetime_points, profile_img_url, tick_type')
             .eq('auth_user_id', state.userAuth.id)
             .single();
         
-        if (error) {
-            console.error('Init: Failed to fetch user profile:', error.message);
-            showToast('Could not load profile. Logging out.', 'error');
-            await handleLogout(); 
+        // 🛑 REDIRECT LOOP FIX: Do not auto-logout if profile is missing!
+        if (error || !userProfile) {
+            console.error('Init: Failed to fetch user profile:', error?.message);
+            
+            // Show the exact ID it's looking for so you can paste it into Supabase
+            alert(`DATABASE ERROR:\nCould not find user in EcoVities DB.\n\nLooking for auth_user_id:\n${state.userAuth.id}\n\nPlease check your Supabase "users" table to ensure this ID is pasted correctly.`);
+            
+            // Remove loader so you aren't stuck on a white screen
+            const loader = document.getElementById('app-loading');
+            if(loader) loader.style.display = 'none';
+            
+            // We stop here instead of calling handleLogout(), breaking the infinite loop.
             return; 
-        }
-
-        if (!userProfile) {
-            showToast('Profile not found. Please contact support.', 'error');
-            await handleLogout();
-            return;
         }
         
         state.currentUser = userProfile;
@@ -80,7 +81,6 @@ const initializeApp = async () => {
         if (!sessionStorage.getItem('login_logged')) {
             logUserActivity('login', 'User logged in');
             sessionStorage.setItem('login_logged', '1');
-            
             showToast(`Welcome back, ${userProfile.full_name}!`, 'success');
         }
 
@@ -113,12 +113,10 @@ const initializeApp = async () => {
         showToast('App failed to initialize.', 'error');
     } finally {
         // --- LOADER FAIL-SAFE REMOVAL ---
-        // This runs regardless of errors to ensure user isn't stuck on white screen
         setTimeout(() => {
             const loader = document.getElementById('app-loading');
             if (loader) {
-                loader.classList.add('loaded'); // Try CSS transition
-                // FORCE REMOVE via inline style after short delay
+                loader.classList.add('loaded');
                 setTimeout(() => { loader.style.display = 'none'; }, 300);
             }
         }, 500);
@@ -140,7 +138,8 @@ const handleLogout = async () => {
             sessionStorage.removeItem('login_logged');
         }
         
-        const { error } = await supabase.auth.signOut();
+        // 🔴 USED AUTH-CLIENT HERE
+        const { error } = await authClient.auth.signOut();
         if (error) console.error('Logout: Error:', error.message);
         
         redirectToLogin();
@@ -157,6 +156,7 @@ const redirectToLogin = () => { window.location.replace('login.html'); };
  */
 export const refreshUserData = async () => {
     try {
+        // 🟢 USED SUPABASE CLIENT HERE
         const { data: userProfile, error } = await supabase
             .from('users')
             .select('id, current_points, lifetime_points, profile_img_url, tick_type')
@@ -260,9 +260,11 @@ if (changePwdForm) {
         btn.textContent = 'Updating...';
 
         try {
-            const { error } = await supabase.auth.updateUser({ password: newPassword });
+            // 🔴 USED AUTH-CLIENT HERE (Updates password in Master Auth Project)
+            const { error } = await authClient.auth.updateUser({ password: newPassword });
             if (error) throw error;
 
+            // 🟢 USED SUPABASE CLIENT HERE (Updates plain text copy in EcoVities DB)
             const { error: tableError } = await supabase
                 .from('users')
                 .update({ password_plain: newPassword })
@@ -299,6 +301,7 @@ if (redeemForm) {
         btn.innerText = 'Verifying...'; 
 
         try {
+            // 🟢 USED SUPABASE CLIENT HERE
             const { data, error } = await supabase.rpc('redeem_coupon', { p_code: code });
             
             if (error) throw error;
