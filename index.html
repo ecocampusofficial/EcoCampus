@@ -1,88 +1,161 @@
-<header class="mobile-topbar">
-    <div class="topbar-left">
-        <button class="menu-btn" id="mobile-menu-btn">
-            <i data-lucide="menu"></i>
-        </button>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EcoCampus</title>
+
+    <link rel="stylesheet" href="style.css">
     
-    <div class="topbar-center">
-        <h1 class="brand-title">EcoCampus</h1>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="supabase.js"></script>
+    <script src="main.js" defer></script>
+</head>
+<body>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1 class="brand-title">EcoCampus</h1>
+            </div>
+
+            <div class="profile-section" id="desktop-profile">
+                <img src="https://via.placeholder.com/80" alt="Profile" id="profile-img" class="profile-img">
+                <div class="profile-info">
+                    <h3 id="user-name">Loading...</h3>
+                    <p id="user-role" class="role">Student</p>
+                    <p id="user-points" class="points"><i data-lucide="leaf"></i> <span>0 EcoPoints</span></p>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a href="#" class="nav-item"><i data-lucide="user"></i> Profile</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="theme-toggle-desktop" class="action-btn theme-toggle">
+                    <i data-lucide="moon" class="theme-icon"></i> <span class="theme-text">Dark Mode</span>
+                </button>
+                <button onclick="logout()" class="action-btn logout-btn auth-required" style="display: none;">
+                    <i data-lucide="log-out"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="mobile-topbar">
+                <div class="topbar-left">
+                    <button class="menu-btn" id="mobile-menu-btn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                </div>
+                
+                <div class="topbar-center">
+                    <h1 class="brand-title">EcoCampus</h1>
+                </div>
+
+                <div class="topbar-right">
+                    <div id="auth-actions" class="login-container"></div>
+                    
+                    <div class="points-badge auth-required" id="mobile-points-badge" style="display: none;">
+                        <i data-lucide="leaf" style="color: #10b981; width: 18px; height: 18px;"></i> 
+                        <span id="mobile-user-points">0</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-container">
+                <div class="apps">
+                    <div class="card" onclick="openApp('/EcoCampus/ecovities')">
+                        <div class="card-icon green"><i data-lucide="recycle"></i></div>
+                        <div class="card-content">
+                            <h3>EcoVities</h3>
+                            <p>Log green habits and earn points.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="openApp('/EcoCampus/ebots')">
+                        <div class="card-icon blue"><i data-lucide="bot"></i></div>
+                        <div class="card-content">
+                            <h3>EBots</h3>
+                            <p>AI assistants for campus help.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="openApp('/EcoCampus/eforms')">
+                        <div class="card-icon purple"><i data-lucide="file-text"></i></div>
+                        <div class="card-content">
+                            <h3>EForms</h3>
+                            <p>Digital applications & feedback.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="openApp('/EcoCampus/elearning')">
+                        <div class="card-icon orange"><i data-lucide="graduation-cap"></i></div>
+                        <div class="card-content">
+                            <h3>E-learning</h3>
+                            <p>Course materials & certifications.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="openApp('/EcoCampus/emedia')">
+                        <div class="card-icon red"><i data-lucide="image"></i></div>
+                        <div class="card-content">
+                            <h3>EMedia</h3>
+                            <p>Campus news and media posts.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="openApp('/EcoCampus/ecount')">
+                        <div class="card-icon teal"><i data-lucide="users"></i></div>
+                        <div class="card-content">
+                            <h3>ECount</h3>
+                            <p>Automated attendance tracking.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="openApp('/EcoCampus/efinance')">
+                        <div class="card-icon gold"><i data-lucide="wallet"></i></div>
+                        <div class="card-content">
+                            <h3>EFinance</h3>
+                            <p>Manage campus expenses.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="openApp('/EcoCampus/eschedule')">
+                        <div class="card-icon navy"><i data-lucide="calendar"></i></div>
+                        <div class="card-content">
+                            <h3>ESchedule</h3>
+                            <p>Daily timetable & reminders.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <i data-lucide="layout-dashboard"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="user"></i>
+                <span>Profile</span>
+            </a>
+            <button class="nav-item theme-toggle" id="theme-toggle-mobile" style="border: none; background: transparent; cursor: pointer;">
+                <i data-lucide="moon" class="theme-icon"></i>
+                <span>Theme</span>
+            </button>
+            <button onclick="logout()" class="nav-item auth-required" style="display: none; border: none; background: transparent; cursor: pointer;">
+                <i data-lucide="log-out" style="color: #ef4444;"></i>
+                <span style="color: #ef4444;">Logout</span>
+            </button>
+        </nav>
     </div>
 
-    <div class="topbar-right">
-        <div id="auth-actions" class="login-container"></div>
-        
-        <div class="points-badge auth-required" id="mobile-points-badge" style="display: none;">
-            <i data-lucide="leaf" style="color: #10b981; width: 18px; height: 18px;"></i> 
-            <span id="mobile-user-points">0</span>
-        </div>
-    </div>
-</header>
-
-<div class="content-container">
-    <div class="apps">
-        <div class="card" onclick="openApp('/EcoCampus/ecovities')">
-            <div class="card-icon green"><i data-lucide="recycle"></i></div>
-            <div class="card-content">
-                <h3>EcoVities</h3>
-                <p>Log green habits and earn points.</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="openApp('/EcoCampus/ebots')">
-            <div class="card-icon blue"><i data-lucide="bot"></i></div>
-            <div class="card-content">
-                <h3>EBots</h3>
-                <p>AI assistants for campus help.</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="openApp('/EcoCampus/eforms')">
-            <div class="card-icon purple"><i data-lucide="file-text"></i></div>
-            <div class="card-content">
-                <h3>EForms</h3>
-                <p>Digital applications & feedback.</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="openApp('/EcoCampus/elearning')">
-            <div class="card-icon orange"><i data-lucide="graduation-cap"></i></div>
-            <div class="card-content">
-                <h3>E-learning</h3>
-                <p>Course materials & certifications.</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="openApp('/EcoCampus/emedia')">
-            <div class="card-icon red"><i data-lucide="image"></i></div>
-            <div class="card-content">
-                <h3>EMedia</h3>
-                <p>Campus news and media posts.</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="openApp('/EcoCampus/ecount')">
-            <div class="card-icon teal"><i data-lucide="users"></i></div>
-            <div class="card-content">
-                <h3>ECount</h3>
-                <p>Automated attendance tracking.</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="openApp('/EcoCampus/efinance')">
-            <div class="card-icon gold"><i data-lucide="wallet"></i></div>
-            <div class="card-content">
-                <h3>EFinance</h3>
-                <p>Manage campus expenses.</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="openApp('/EcoCampus/eschedule')">
-            <div class="card-icon navy"><i data-lucide="calendar"></i></div>
-            <div class="card-content">
-                <h3>ESchedule</h3>
-                <p>Daily timetable & reminders.</p>
-            </div>
-        </div>
-    </div>
-</div>
+</body>
+</html>
