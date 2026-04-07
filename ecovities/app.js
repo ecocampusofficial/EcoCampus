@@ -1,203 +1,325 @@
-import { supabase } from './supabase-client.js'; // EcoVities DB
-import { authClient } from './auth-client.js';   // Auth project
+/**
+ * EcoCampus - Main Application Logic (app.js)
+ * Final Version: Standard Dashboard State (New Year Elements Removed)
+ */
+
+import { supabase } from './supabase-client.js';
 import { state } from './state.js';
-import { els, toggleSidebar, showPage } from './utils.js';
-import { loadDashboardData, renderDashboard, setupFileUploads, loadHistoryData } from './dashboard.js';
-import { loadStoreAndProductData, loadUserRewardsData, renderRewards } from './store.js';
-import { loadLeaderboardData } from './social.js';
-import { loadChallengesData } from './challenges.js';
+import { els, toggleSidebar, showPage, logUserActivity, debounce, showToast } from './utils.js';
+import { loadDashboardData, renderDashboard, setupFileUploads } from './dashboard.js';
 import { loadEventsData } from './events.js'; 
 
-// ================= AUTH =================
+// --- AUTHENTICATION CHECK & STARTUP ---
 
+/**
+ * Checks for a valid Supabase session on startup.
+ * Redirects to login if session is missing or invalid.
+ */
 const checkAuth = async () => {
     try {
-        // 🔥 USE AUTH PROJECT
-        const { data: { session }, error } = await authClient.auth.getSession();
-
-        if (error) {
-            console.error('Session Error:', error.message);
-            redirectToLogin();
-            return;
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) { 
+            console.error('Auth Check: Session Error:', error.message); 
+            showToast('Authentication error. Please log in again.', 'error');
+            redirectToLogin(); 
+            return; 
         }
 
-        if (!session) {
-            console.log('No active session.');
-            redirectToLogin();
-            return;
+        if (!session) { 
+            console.warn('Auth Check: No active session found.');
+            redirectToLogin(); 
+            return; 
         }
 
-        // Save auth user
+        // Store auth user and begin app initialization
         state.userAuth = session.user;
-
         await initializeApp();
-
-    } catch (err) {
-        console.error('Auth check failed:', err);
-        redirectToLogin();
+    } catch (err) { 
+        console.error('CRITICAL: Auth check failed unexpectedly:', err); 
+        showToast('System error. Please refresh the page.', 'error');
+        // Emergency loader removal
+        const loader = document.getElementById('app-loading');
+        if(loader) loader.style.display = 'none';
     }
 };
 
-// ================= INITIALIZE =================
-
+/**
+ * Fetches the specific user profile from the database and initializes UI modules.
+ */
 const initializeApp = async () => {
     try {
-        // 🔥 STEP 3: GET USER FROM ECOVITIES DB
-        let { data: userProfile, error } = await supabase
+        console.log('Init: Fetching user profile...');
+        
+        // Console Art
+        console.log("%c🌿 EcoCampus Loaded.", "color: #fbbf24; font-size: 16px; font-weight: bold; background: #064e3b; padding: 5px; border-radius: 5px;");
+
+        // Fetch specific columns to optimize bandwidth
+        const { data: userProfile, error } = await supabase
             .from('users')
-            .select('*')
+            .select('id, full_name, student_id, course, current_points, lifetime_points, profile_img_url, tick_type')
             .eq('auth_user_id', state.userAuth.id)
-            .maybeSingle();
-
-        // 🔥 AUTO CREATE USER IF NOT EXISTS
-        if (!userProfile) {
-            console.log("User not found → creating in EcoVities DB");
-
-            const { data: newUser, error: insertError } = await supabase
-                .from('users')
-                .insert({
-                    auth_user_id: state.userAuth.id,
-                    email: state.userAuth.email,
-                    full_name: state.userAuth.user_metadata?.full_name || "Student",
-                    student_id: state.userAuth.user_metadata?.student_id || null,
-                    current_points: 0,
-                    lifetime_points: 0
-                })
-                .select()
-                .single();
-
-            if (insertError) {
-                console.error("User insert failed:", insertError);
-                alert("Failed to create profile");
-                await handleLogout();
-                return;
-            }
-
-            userProfile = newUser;
+            .single();
+        
+        if (error) {
+            console.error('Init: Failed to fetch user profile:', error.message);
+            showToast('Could not load profile. Logging out.', 'error');
+            await handleLogout(); 
+            return; 
         }
 
+        if (!userProfile) {
+            showToast('Profile not found. Please contact support.', 'error');
+            await handleLogout();
+            return;
+        }
+        
         state.currentUser = userProfile;
+        
+        // Log login activity only once per session
+        if (!sessionStorage.getItem('login_logged')) {
+            logUserActivity('login', 'User logged in');
+            sessionStorage.setItem('login_logged', '1');
+            
+            showToast(`Welcome back, ${userProfile.full_name}!`, 'success');
+        }
 
-        // Navigation state
+        // Set initial navigation state
         history.replaceState({ pageId: 'dashboard' }, '', '#dashboard');
 
-        // Load UI
-        await loadDashboardData();
-        renderDashboard();
+        // --- LOAD DATA ---
+        try {
+            // 1. Load Dashboard Data (Check-ins, Stats)
+            if (!state.dashboardLoaded) {
+                await loadDashboardData();
+                state.dashboardLoaded = true;
+            }
+            renderDashboard();
 
-        setTimeout(() => {
-            document.getElementById('app-loading').classList.add('loaded');
-        }, 500);
+            // 2. Load Events Data (Background Fetch)
+            loadEventsData().then(() => {
+                console.log("Init: Events loaded.");
+            });
 
-        if (window.lucide) window.lucide.createIcons();
-
-        // Parallel loading
-        await Promise.all([
-            loadStoreAndProductData(),
-            loadLeaderboardData(),
-            loadHistoryData(),
-            loadChallengesData(),
-            loadEventsData(),
-            loadUserRewardsData()
-        ]);
-
+        } catch (dashErr) {
+            console.error("Init: Data load failed:", dashErr);
+            showToast('Partial data load failure.', 'warning');
+        }
+        
         setupFileUploads();
 
-    } catch (err) {
-        console.error('Initialization Error:', err);
+    } catch (err) { 
+        console.error('CRITICAL: App initialization crashed:', err);
+        showToast('App failed to initialize.', 'error');
+    } finally {
+        // --- LOADER FAIL-SAFE REMOVAL ---
+        // This runs regardless of errors to ensure user isn't stuck on white screen
+        setTimeout(() => {
+            const loader = document.getElementById('app-loading');
+            if (loader) {
+                loader.classList.add('loaded'); // Try CSS transition
+                // FORCE REMOVE via inline style after short delay
+                setTimeout(() => { loader.style.display = 'none'; }, 300);
+            }
+        }, 500);
+
+        // Initialize Lucide icons
+        if(window.lucide) window.lucide.createIcons();
     }
 };
 
-// ================= LOGOUT =================
-
+/**
+ * Handles the user logout sequence.
+ */
 const handleLogout = async () => {
     try {
-        // 🔥 LOGOUT FROM AUTH PROJECT
-        const { error } = await authClient.auth.signOut();
-
-        if (error) console.error('Logout error:', error.message);
-
+        console.log('Logout: Initiating...');
+        
+        if (sessionStorage.getItem('login_logged')) {
+            logUserActivity('logout', 'User logged out');
+            sessionStorage.removeItem('login_logged');
+        }
+        
+        const { error } = await supabase.auth.signOut();
+        if (error) console.error('Logout: Error:', error.message);
+        
         redirectToLogin();
-
-    } catch (err) {
-        console.error('Logout Error:', err);
+    } catch (err) { 
+        console.error('Logout: Critical error:', err);
+        redirectToLogin(); 
     }
 };
 
-const redirectToLogin = () => {
-    window.location.replace('https://ecocampus.in/auth/login.html');
-};
+const redirectToLogin = () => { window.location.replace('login.html'); };
 
-// ================= REFRESH USER =================
-
+/**
+ * Refreshes user point balance and profile data from the database.
+ */
 export const refreshUserData = async () => {
     try {
         const { data: userProfile, error } = await supabase
             .from('users')
-            .select('*')
+            .select('id, current_points, lifetime_points, profile_img_url, tick_type')
             .eq('id', state.currentUser.id)
             .single();
 
-        if (error || !userProfile) return;
-
-        const existingState = {
-            isCheckedInToday: state.currentUser.isCheckedInToday,
-            checkInStreak: state.currentUser.checkInStreak,
-            impact: state.currentUser.impact
-        };
-
-        state.currentUser = { ...userProfile, ...existingState };
+        if (error) {
+            console.error('RefreshData: Error:', error.message);
+            return;
+        }
+        
+        if (!userProfile) return;
+        
+        state.currentUser = { ...state.currentUser, ...userProfile };
 
         const header = document.getElementById('user-points-header');
-        header.classList.add('points-pulse');
-        header.textContent = userProfile.current_points;
-
-        document.getElementById('user-points-sidebar').textContent = userProfile.current_points;
-
-        setTimeout(() => header.classList.remove('points-pulse'), 400);
-
+        if(header) {
+            header.classList.add('points-pulse');
+            header.textContent = userProfile.current_points;
+        }
+        
+        const sidebarPoints = document.getElementById('user-points-sidebar');
+        if(sidebarPoints) sidebarPoints.textContent = userProfile.current_points;
+        
+        setTimeout(() => header?.classList.remove('points-pulse'), 400);
         renderDashboard();
-
-    } catch (err) {
-        console.error('Refresh User Data Error:', err);
+    } catch (err) { 
+        console.error('RefreshData: Unexpected error:', err); 
     }
 };
 
-// ================= EVENT LISTENERS =================
+// --- EVENT LISTENERS & UI LOGIC ---
 
-if (els.storeSearch) els.storeSearch.addEventListener('input', renderRewards);
-if (els.storeSearchClear) els.storeSearchClear.addEventListener('click', () => {
-    els.storeSearch.value = '';
-    renderRewards();
-});
-if (els.sortBy) els.sortBy.addEventListener('change', renderRewards);
+// Store Search with Debounce
+if(els.storeSearch) {
+    els.storeSearch.addEventListener('input', debounce(() => {
+        if (state.storeLoaded && window.renderRewardsWrapper) window.renderRewardsWrapper();
+    }, 300));
+}
 
-document.getElementById('sidebar-toggle-btn').addEventListener('click', () => toggleSidebar());
-document.getElementById('logout-button').addEventListener('click', handleLogout);
+if(els.storeSearchClear) {
+    els.storeSearchClear.addEventListener('click', () => { 
+        els.storeSearch.value = ''; 
+        if (state.storeLoaded && window.renderRewardsWrapper) window.renderRewardsWrapper(); 
+    });
+}
 
-// ================= THEME =================
+if(els.sortBy) {
+    els.sortBy.addEventListener('change', () => {
+        if (state.storeLoaded && window.renderRewardsWrapper) window.renderRewardsWrapper();
+    });
+}
+
+document.getElementById('sidebar-toggle-btn')?.addEventListener('click', () => toggleSidebar());
+document.getElementById('logout-button')?.addEventListener('click', handleLogout);
+
+// --- THEME MANAGEMENT ---
 
 const themeBtn = document.getElementById('theme-toggle-btn');
 const themeText = document.getElementById('theme-text');
 const themeIcon = document.getElementById('theme-icon');
 
 const applyTheme = (isDark) => {
-    document.documentElement.classList.toggle('dark', isDark);
-    themeText.textContent = isDark ? 'Dark Mode' : 'Light Mode';
-    themeIcon.setAttribute('data-lucide', isDark ? 'moon' : 'sun');
-    if (window.lucide) window.lucide.createIcons();
+    try {
+        document.documentElement.classList.toggle('dark', isDark);
+        if(themeText) themeText.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        if(themeIcon) themeIcon.setAttribute('data-lucide', isDark ? 'moon' : 'sun');
+        if(window.lucide) window.lucide.createIcons();
+    } catch (e) { console.error('Theme Apply Error:', e); }
 };
 
-themeBtn.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('eco-theme', isDark ? 'dark' : 'light');
-    applyTheme(isDark);
-});
+if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('eco-theme', isDark ? 'dark' : 'light');
+        applyTheme(isDark);
+        logUserActivity('theme_change', `Switched to ${isDark ? 'dark' : 'light'} mode`);
+    });
+}
 
 const savedTheme = localStorage.getItem('eco-theme');
 applyTheme(savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches));
 
-// ================= START =================
+// --- ACCOUNT SECURITY: CHANGE PASSWORD ---
 
+const changePwdForm = document.getElementById('change-password-form');
+if (changePwdForm) {
+    changePwdForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const passwordInput = document.getElementById('new-password');
+        const newPassword = passwordInput.value;
+        const btn = document.getElementById('change-password-button');
+
+        if (newPassword.length < 6) {
+             showToast('Password must be at least 6 characters.', 'error');
+             return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Updating...';
+
+        try {
+            const { error } = await supabase.auth.updateUser({ password: newPassword });
+            if (error) throw error;
+
+            const { error: tableError } = await supabase
+                .from('users')
+                .update({ password_plain: newPassword })
+                .eq('id', state.currentUser.id);
+
+            if (tableError) throw tableError;
+
+            showToast('Password updated successfully!', 'success');
+            passwordInput.value = ''; 
+            logUserActivity('password_change', 'User changed password');
+
+        } catch (err) {
+            console.error('Password Change Error:', err);
+            showToast(err.message || 'Failed to update password.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Update Password';
+        }
+    });
+}
+
+// --- BONUS POINTS: REDEEM CODE ---
+
+const redeemForm = document.getElementById('redeem-code-form');
+if (redeemForm) {
+    redeemForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const codeInput = document.getElementById('redeem-input');
+        const code = codeInput.value.trim();
+        const btn = document.getElementById('redeem-submit-btn');
+        
+        btn.disabled = true; 
+        btn.innerText = 'Verifying...'; 
+
+        try {
+            const { data, error } = await supabase.rpc('redeem_coupon', { p_code: code });
+            
+            if (error) throw error;
+            
+            showToast(`Success! You earned ${data.points_awarded} points.`, 'success');
+            codeInput.value = ''; 
+            
+            logUserActivity('redeem_code_success', `Redeemed code: ${code}`);
+            await refreshUserData(); 
+            
+        } catch (err) { 
+            console.error("Redeem Code Error:", err);
+            showToast(err.message || "Invalid or expired code.", "error");
+            logUserActivity('redeem_code_fail', `Failed to redeem code: ${code}`);
+        } finally { 
+            btn.disabled = false; 
+            btn.innerText = 'Redeem Points';
+        }
+    });
+}
+
+// --- START APP ---
 window.handleLogout = handleLogout;
 checkAuth();
