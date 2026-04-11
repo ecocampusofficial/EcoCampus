@@ -22,7 +22,6 @@ function updateThemeUI(theme) {
         
         if(textSpan) textSpan.innerText = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
         
-        // Update lucide icon attribute and re-render
         if(iconSpan) {
             iconSpan.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
         }
@@ -48,28 +47,31 @@ async function checkAuth() {
     const authActions = document.getElementById("auth-actions");
     const authRequiredElements = document.querySelectorAll(".auth-required");
     const userNameEl = document.getElementById("user-name");
+    const userMetaEl = document.getElementById("user-meta");
 
     if (!session) {
         if(userNameEl) userNameEl.innerText = "Guest";
         document.getElementById("user-role").innerText = "Not logged in";
+        if(userMetaEl) userMetaEl.innerText = "";
+        
         authActions.innerHTML = `<button class="login-btn" onclick="goLogin()">Login</button>`;
         authRequiredElements.forEach(el => el.style.display = "none");
     } else {
         authActions.innerHTML = ""; 
-        authRequiredElements.forEach(el => el.style.display = "flex"); // Shows logout buttons & mobile points pill
+        authRequiredElements.forEach(el => el.style.display = "flex"); 
         fetchUserProfile(session.user.id, session.user.email);
     }
 }
 
 async function fetchUserProfile(authUserId, fallbackEmail) {
     try {
+        // Updated to fetch 'course' and 'student_id' based on the schema
         const { data: userProfile, error } = await sb
             .from('users')
-            .select('full_name, profile_img_url, role')
+            .select('full_name, profile_img_url, role, course, student_id') 
             .eq('auth_user_id', authUserId)
             .single();
 
-        // Check if error is related to infinite recursion RLS policy
         if (error) {
             console.error("Supabase Error:", error.message);
             throw error; 
@@ -85,11 +87,14 @@ async function fetchUserProfile(authUserId, fallbackEmail) {
                 document.getElementById('user-role').innerText = userProfile.role;
             }
             
-            // You can replace '0' with actual point fetching logic here later
-            // document.getElementById('mobile-user-points').innerText = "150"; 
+            // Format Course and Student ID dynamically from DB
+            const metaInfo = [];
+            if(userProfile.course) metaInfo.push(userProfile.course);
+            if(userProfile.student_id) metaInfo.push(userProfile.student_id);
+            document.getElementById('user-meta').innerText = metaInfo.join(' • ');
         }
     } catch (err) {
-        console.error("Error fetching profile. (Did you fix your RLS Policy?)", err.message);
+        console.error("Error fetching profile.", err.message);
         document.getElementById('user-name').innerText = fallbackEmail;
     }
 }
