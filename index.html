@@ -1,339 +1,307 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EcoCampus - Dashboard</title>
-
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>EcoCampus - App</title>
+    
     <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase.js"></script>
     <script src="main.js" defer></script>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#3f4a3c",
+                        "surface-dim": "#d9dadb",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#2f3f92",
+                        "inverse-primary": "#78dc77",
+                        "secondary-fixed": "#dee0ff",
+                        "outline": "#6f7a6b",
+                        "surface-container": "#edeeef",
+                        "on-primary-container": "#003c0b",
+                        "on-primary-fixed-variant": "#005313",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-fixed": "#94f990",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "on-primary-fixed": "#002204",
+                        "tertiary-fixed-dim": "#ffb870",
+                        "outline-variant": "#becab9",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9fa",
+                        "on-background": "#191c1d",
+                        "surface-container-low": "#f3f4f5",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#bac3ff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-bright": "#f8f9fa",
+                        "error": "#ba1a1a",
+                        "background": "#f8f9fa",
+                        "secondary": "#4858ab",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#78dc77",
+                        "on-secondary-fixed": "#00105b",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#e18500",
+                        "primary-container": "#4caf50",
+                        "surface-tint": "#006e1c",
+                        "tertiary-fixed": "#ffdcbe",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-error": "#ffffff",
+                        "tertiary": "#8b5000",
+                        "on-secondary-container": "#27378a",
+                        "on-surface": "#191c1d",
+                        "on-tertiary-container": "#4d2b00",
+                        "inverse-surface": "#2e3132",
+                        "secondary-container": "#96a5ff",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary": "#006e1c"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
 </head>
-<body>
+<body class="bg-surface text-on-surface antialiased mb-24">
 
-    <div class="layout">
-        <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-        <aside class="sidebar" id="sidebar">
-            <div class="profile-section" id="desktop-profile">
-                <img src="https://via.placeholder.com/80" alt="Profile" id="profile-img" class="profile-img">
-                <div class="profile-info">
-                    <h3 id="user-name">Loading...</h3>
-                    <p id="user-role" class="role">Student</p>
-                    <p id="user-meta" class="meta-text"></p>
+    <header class="fixed top-0 w-full z-50 bg-surface/70 dark:bg-slate-900/70 backdrop-blur-xl no-border bg-surface-container-low dark:bg-slate-800">
+        <div class="flex justify-between items-center px-6 h-16 w-full max-w-screen-xl mx-auto">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container bg-surface-variant">
+                    <img id="header-avatar" alt="Profile picture" class="w-full h-full object-cover" src="https://via.placeholder.com/150"/>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs text-on-surface-variant font-medium">Welcome back,</span>
+                    <span id="header-name" class="text-sm font-bold text-on-surface">Loading...</span>
                 </div>
             </div>
-
-            <nav class="nav-menu">
-                <p class="menu-label">MENU</p>
-                <a href="#" class="nav-item active" onclick="switchView('dashboard', this)"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-                <a href="#" class="nav-item" onclick="switchView('profile', this)"><i data-lucide="user"></i> Profile</a>
-                
-                <p class="menu-label" style="margin-top: 15px;">PREFERENCES</p>
-                <a href="#" class="nav-item"><i data-lucide="settings"></i> Settings</a>
-                <a href="#" class="nav-item"><i data-lucide="key"></i> Change Password</a>
-                <a href="#" class="nav-item"><i data-lucide="info"></i> About</a>
-                <a href="#" class="nav-item"><i data-lucide="help-circle"></i> Help</a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <button id="theme-toggle-desktop" class="action-btn theme-toggle">
-                    <i data-lucide="moon" class="theme-icon"></i> <span class="theme-text">Dark Mode</span>
-                </button>
-                <button onclick="logout()" class="action-btn logout-btn auth-required" style="display: none;">
-                    <i data-lucide="log-out"></i> Logout
+            <div class="flex items-center gap-2">
+                <button class="p-2 rounded-full hover:bg-slate-100/50 transition-colors active:scale-95 duration-200 relative">
+                    <span class="material-symbols-outlined text-slate-500">notifications</span>
+                    <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface"></span>
                 </button>
             </div>
-        </aside>
+        </div>
+    </header>
 
-        <main class="main-content">
-            
-            <header class="app-header">
-                <div class="header-left">
-                    <button class="menu-btn" id="mobile-menu-btn">
-                        <i data-lucide="menu"></i>
-                    </button>
+    <main class="pt-20 px-6 max-w-screen-md mx-auto">
+        
+        <div id="view-dashboard" class="tab-content active">
+            <section class="mt-4 mb-8">
+                <div onclick="openApp('/EcoCampus/ecovities')" class="cursor-pointer active:scale-[0.98] transition-transform relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-primary-container p-6 text-white shadow-2xl shadow-primary/20 group">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                    <div class="absolute -left-4 -bottom-4 w-24 h-24 bg-black/5 rounded-full blur-xl"></div>
+                    <div class="relative z-10 flex justify-between items-start">
+                        <div>
+                            <h2 class="text-sm font-medium opacity-90 tracking-wide flex items-center gap-1">
+                                EcoVities <span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+                            </h2>
+                            <div class="mt-1 flex items-baseline gap-1">
+                                <span class="text-4xl font-extrabold tracking-tight">1,250</span>
+                                <span class="text-xs font-semibold opacity-80 uppercase tracking-widest">EcoPoints</span>
+                            </div>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-md rounded-lg px-3 py-1.5 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                            <span class="text-xs font-bold">5 Days</span>
+                        </div>
+                    </div>
+                    <div class="relative z-10 mt-8 grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] uppercase opacity-70 tracking-widest">Current Rank</span>
+                            <span class="text-lg font-bold">#12 <span class="text-xs font-normal opacity-70">in campus</span></span>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[10px] uppercase opacity-70 tracking-widest">Next Goal</span>
+                            <span class="text-lg font-bold">1,500 <span class="text-xs font-normal opacity-70">pts</span></span>
+                        </div>
+                    </div>
                 </div>
+            </section>
+
+            <section class="grid grid-cols-2 gap-4 mb-6">
+                <div onclick="openApp('/EcoCampus/elearning')" class="col-span-2 cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-lowest rounded-xl p-5 shadow-[0_4px_32px_rgba(0,0,0,0.04)] flex flex-col justify-between min-h-[160px] group">
+                    <div class="flex justify-between items-start">
+                        <div class="p-2.5 bg-primary/10 rounded-lg">
+                            <span class="material-symbols-outlined text-primary">school</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-2xl font-bold text-on-surface">65%</span>
+                            <p class="text-[10px] text-on-surface-variant font-medium">Completion</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-end">
+                        <div class="w-full">
+                            <h3 class="text-sm font-bold text-on-surface flex items-center gap-1">E-Learning <span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span></h3>
+                            <p class="text-xs text-on-surface-variant mt-1">3 Active Courses</p>
+                            <div class="w-full bg-surface-container h-1.5 rounded-full mt-3">
+                                <div class="bg-primary h-full rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div onclick="openApp('/EcoCampus/efinance')" class="cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-low rounded-xl p-5 flex flex-col justify-between group">
+                    <div class="flex justify-between items-start">
+                        <div class="p-2.5 bg-secondary/10 rounded-lg w-fit">
+                            <span class="material-symbols-outlined text-secondary">payments</span>
+                        </div>
+                        <span class="material-symbols-outlined text-sm text-on-surface-variant opacity-0 group-hover:opacity-100">open_in_new</span>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-xs font-bold text-on-surface-variant">E-Finance</h3>
+                        <div class="mt-1">
+                            <span class="text-lg font-bold text-on-surface">₹2,450</span>
+                            <p class="text-[10px] text-on-surface-variant leading-tight">Allowance Left</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div onclick="openApp('/EcoCampus/ecount')" class="cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-low rounded-xl p-5 flex flex-col justify-between group">
+                    <div class="flex justify-between items-start">
+                        <div class="p-2.5 bg-tertiary-container/10 rounded-lg w-fit">
+                            <span class="material-symbols-outlined text-tertiary">fingerprint</span>
+                        </div>
+                        <span class="material-symbols-outlined text-sm text-on-surface-variant opacity-0 group-hover:opacity-100">open_in_new</span>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-xs font-bold text-on-surface-variant">E-Count</h3>
+                        <div class="mt-1">
+                            <span class="text-lg font-bold text-on-surface">88%</span>
+                            <p class="text-[10px] text-on-surface-variant leading-tight">Overall Attendance</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div onclick="openApp('/EcoCampus/eschedule')" class="col-span-2 cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-highest rounded-xl p-5 flex items-center gap-4 group">
+                    <div class="p-3 bg-white rounded-xl shadow-sm">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-on-surface flex items-center gap-1">ESchedule</h3>
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-tighter bg-primary/10 px-2 py-0.5 rounded">Next Up</span>
+                        </div>
+                        <div class="flex justify-between items-end mt-1">
+                            <div>
+                                <p class="text-xs text-on-surface-variant">Lab 402 • Applied Science</p>
+                                <p class="text-sm font-semibold text-on-surface">11:30 AM — 01:00 PM</p>
+                            </div>
+                            <span class="material-symbols-outlined text-on-surface-variant text-sm group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-profile" class="tab-content">
+            <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-variant text-center relative overflow-hidden mb-6 mt-4">
+                <div class="absolute top-0 left-0 w-full h-24 bg-primary/20"></div>
                 
-                <div class="header-center">
-                    <h1 class="brand-title">EcoCampus</h1>
+                <div class="relative z-10 flex flex-col items-center mt-4">
+                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-surface shadow-sm mb-4 bg-surface-variant">
+                        <img id="profile-avatar-large" alt="User profile" class="w-full h-full object-cover" src="https://via.placeholder.com/150"/>
+                    </div>
+                    <h3 id="profile-name" class="text-xl font-bold text-on-surface">Loading...</h3>
+                    <div class="flex items-center gap-2 mt-1 mb-4">
+                        <span id="profile-role" class="bg-primary-container text-on-primary-container text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Student</span>
+                    </div>
+                    <p id="profile-email" class="text-sm text-on-surface-variant flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">mail</span> loading...
+                    </p>
                 </div>
-
-                <div class="header-right">
-                    <div id="auth-actions" class="login-container"></div>
-                    
-                    <div class="notification-wrapper auth-required" style="display: none;">
-                        <button class="icon-btn" id="notif-btn">
-                            <i data-lucide="heart"></i>
-                            <span class="badge">3</span>
-                        </button>
-                        
-                        <div class="notification-panel" id="notif-panel">
-                            <div class="notif-header">
-                                <h3>Notifications</h3>
-                            </div>
-                            <div class="notif-list">
-                                <div class="notif-item unread">
-                                    <img src="https://i.pravatar.cc/150?img=32" alt="User" class="notif-avatar">
-                                    <div class="notif-content">
-                                        <p><strong>Priya Sharma</strong> liked your post in EMedia.</p>
-                                        <span class="notif-time">2m</span>
-                                    </div>
-                                    <div class="notif-action"><img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=100&q=80" class="notif-post-thumb"></div>
-                                </div>
-                                <div class="notif-item unread">
-                                    <div class="notif-avatar system-avatar"><i data-lucide="file-text"></i></div>
-                                    <div class="notif-content">
-                                        <p><strong>Admin</strong> assigned you a new Hostel EForm.</p>
-                                        <span class="notif-time">1h</span>
-                                    </div>
-                                </div>
-                                <div class="notif-item">
-                                    <img src="https://i.pravatar.cc/150?img=11" alt="User" class="notif-avatar">
-                                    <div class="notif-content">
-                                        <p><strong>Rahul Verma</strong> started following your EcoVities.</p>
-                                        <span class="notif-time">4h</span>
-                                    </div>
-                                    <div class="notif-action"><button class="follow-btn">Follow</button></div>
-                                </div>
-                                <div class="notif-item">
-                                    <div class="notif-avatar system-avatar success"><i data-lucide="check-circle"></i></div>
-                                    <div class="notif-content">
-                                        <p><strong>E-Learning</strong>: Certificate generated for 'Green Energy 101'.</p>
-                                        <span class="notif-time">1d</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <div class="content-container">
-                
-                <section id="dashboard-view" class="view-section active">
-                    <h2 class="section-title">Your Workspace</h2>
-                    <div class="dashboard-grid">
-                        <div class="widget-card">
-                            <div class="widget-header">
-                                <div class="widget-title">
-                                    <div class="card-icon green"><i data-lucide="recycle"></i></div>
-                                    <h3>EcoVities</h3>
-                                </div>
-                            </div>
-                            <div class="widget-body">
-                                <div class="main-stat">
-                                    <span class="stat-value text-green">1,250</span>
-                                    <span class="stat-label">Total EcoPoints</span>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat"><span>Streak</span><strong>5 Days</strong></div>
-                                    <div class="sub-stat"><span>Rank</span><strong>#12</strong></div>
-                                </div>
-                            </div>
-                            <div class="widget-footer">
-                                <button class="open-app-btn" onclick="openApp('/EcoCampus/ecovities')">Launch App <i data-lucide="arrow-right"></i></button>
-                            </div>
-                        </div>
-                        <div class="widget-card">
-                            <div class="widget-header">
-                                <div class="widget-title">
-                                    <div class="card-icon purple"><i data-lucide="file-text"></i></div>
-                                    <h3>EForms</h3>
-                                </div>
-                            </div>
-                            <div class="widget-body">
-                                <div class="main-stat">
-                                    <span class="stat-value text-purple">2</span>
-                                    <span class="stat-label">Pending Forms</span>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat"><span>Hostel App</span><strong style="color: #ef4444;">Due Today</strong></div>
-                                    <div class="sub-stat"><span>Feedback</span><strong>Optional</strong></div>
-                                </div>
-                            </div>
-                            <div class="widget-footer">
-                                <button class="open-app-btn" onclick="openApp('/EcoCampus/eforms')">Review Forms <i data-lucide="arrow-right"></i></button>
-                            </div>
-                        </div>
-                        <div class="widget-card">
-                            <div class="widget-header">
-                                <div class="widget-title">
-                                    <div class="card-icon orange"><i data-lucide="graduation-cap"></i></div>
-                                    <h3>E-Learning</h3>
-                                </div>
-                            </div>
-                            <div class="widget-body">
-                                <div class="main-stat">
-                                    <span class="stat-value text-orange">65%</span>
-                                    <span class="stat-label">Course Completion</span>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat"><span>Active</span><strong>3 Courses</strong></div>
-                                    <div class="sub-stat"><span>Next Exam</span><strong>Oct 12</strong></div>
-                                </div>
-                            </div>
-                            <div class="widget-footer">
-                                <button class="open-app-btn" onclick="openApp('/EcoCampus/elearning')">Resume Study <i data-lucide="arrow-right"></i></button>
-                            </div>
-                        </div>
-                        <div class="widget-card">
-                            <div class="widget-header">
-                                <div class="widget-title">
-                                    <div class="card-icon navy"><i data-lucide="calendar"></i></div>
-                                    <h3>ESchedule</h3>
-                                </div>
-                            </div>
-                            <div class="widget-body">
-                                <div class="main-stat">
-                                    <span class="stat-value highlight-text">11:30 AM</span>
-                                    <span class="stat-label">Next: Database Systems Lab</span>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat"><span>Room</span><strong>Lab 402</strong></div>
-                                    <div class="sub-stat"><span>Remaining</span><strong>3 Classes</strong></div>
-                                </div>
-                            </div>
-                            <div class="widget-footer">
-                                <button class="open-app-btn" onclick="openApp('/EcoCampus/eschedule')">View Timetable <i data-lucide="arrow-right"></i></button>
-                            </div>
-                        </div>
-                        <div class="widget-card">
-                            <div class="widget-header">
-                                <div class="widget-title">
-                                    <div class="card-icon teal"><i data-lucide="users"></i></div>
-                                    <h3>ECount</h3>
-                                </div>
-                            </div>
-                            <div class="widget-body">
-                                <div class="main-stat">
-                                    <span class="stat-value text-teal">88%</span>
-                                    <span class="stat-label">Overall Attendance</span>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat"><span>Status</span><strong style="color: #10b981;">Safe</strong></div>
-                                    <div class="sub-stat"><span>Leaves</span><strong>4 Used</strong></div>
-                                </div>
-                            </div>
-                            <div class="widget-footer">
-                                <button class="open-app-btn" onclick="openApp('/EcoCampus/ecount')">Scan Attendance <i data-lucide="arrow-right"></i></button>
-                            </div>
-                        </div>
-                        <div class="widget-card">
-                            <div class="widget-header">
-                                <div class="widget-title">
-                                    <div class="card-icon gold"><i data-lucide="wallet"></i></div>
-                                    <h3>EFinance</h3>
-                                </div>
-                            </div>
-                            <div class="widget-body">
-                                <div class="main-stat">
-                                    <span class="stat-value text-gold">₹2,450</span>
-                                    <span class="stat-label">Monthly Allowance Left</span>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat"><span>Spent</span><strong>₹1,550</strong></div>
-                                    <div class="sub-stat"><span>Cafeteria</span><strong>₹400</strong></div>
-                                </div>
-                            </div>
-                            <div class="widget-footer">
-                                <button class="open-app-btn" onclick="openApp('/EcoCampus/efinance')">Manage Wallet <i data-lucide="arrow-right"></i></button>
-                            </div>
-                        </div>
-                        <div class="widget-card">
-                            <div class="widget-header">
-                                <div class="widget-title">
-                                    <div class="card-icon blue"><i data-lucide="bot"></i></div>
-                                    <h3>EBots</h3>
-                                </div>
-                            </div>
-                            <div class="widget-body">
-                                <div class="main-stat">
-                                    <span class="stat-value text-blue">Online</span>
-                                    <span class="stat-label">Campus Assistants</span>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat"><span>Available</span><strong>4 Bots</strong></div>
-                                    <div class="sub-stat"><span>Recent</span><strong>Library Bot</strong></div>
-                                </div>
-                            </div>
-                            <div class="widget-footer">
-                                <button class="open-app-btn" onclick="openApp('/EcoCampus/ebots')">Ask a Question <i data-lucide="arrow-right"></i></button>
-                            </div>
-                        </div>
-                        <div class="widget-card">
-                            <div class="widget-header">
-                                <div class="widget-title">
-                                    <div class="card-icon red"><i data-lucide="image"></i></div>
-                                    <h3>EMedia</h3>
-                                </div>
-                            </div>
-                            <div class="widget-body">
-                                <div class="main-stat">
-                                    <span class="stat-value text-red">12</span>
-                                    <span class="stat-label">New Campus Posts</span>
-                                </div>
-                                <div class="sub-stats">
-                                    <div class="sub-stat"><span>Events</span><strong>3 Upcoming</strong></div>
-                                    <div class="sub-stat"><span>News</span><strong>9 Unread</strong></div>
-                                </div>
-                            </div>
-                            <div class="widget-footer">
-                                <button class="open-app-btn" onclick="openApp('/EcoCampus/emedia')">Browse Feed <i data-lucide="arrow-right"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="profile-view" class="view-section" style="display: none;">
-                    <h2 class="section-title">My Profile</h2>
-                    <div class="full-profile-card">
-                        <div class="profile-header-bg"></div>
-                        <div class="profile-content-wrap">
-                            <img src="https://via.placeholder.com/120" id="full-profile-img" class="full-profile-avatar">
-                            <h2 id="full-profile-name">Loading...</h2>
-                            <span class="badge-role" id="full-profile-role">Student</span>
-                            
-                            <div class="profile-details-grid">
-                                <div class="detail-item">
-                                    <i data-lucide="mail"></i>
-                                    <div>
-                                        <span class="label">Email Address</span>
-                                        <strong id="full-profile-email">---</strong>
-                                    </div>
-                                </div>
-                                <div class="detail-item">
-                                    <i data-lucide="book-open"></i>
-                                    <div>
-                                        <span class="label">Course</span>
-                                        <strong id="full-profile-course">---</strong>
-                                    </div>
-                                </div>
-                                <div class="detail-item">
-                                    <i data-lucide="hash"></i>
-                                    <div>
-                                        <span class="label">Student ID</span>
-                                        <strong id="full-profile-id">---</strong>
-                                    </div>
-                                </div>
-                                <div class="detail-item">
-                                    <i data-lucide="award"></i>
-                                    <div>
-                                        <span class="label">EcoPoints Balance</span>
-                                        <strong>1,250</strong>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="edit-profile-btn"><i data-lucide="edit-3"></i> Edit Profile Information</button>
-                        </div>
-                    </div>
-                </section>
-
             </div>
-        </main>
-    </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl border border-surface-variant overflow-hidden mb-6 shadow-sm">
+                
+                <div class="p-4 flex items-center gap-4 border-b border-surface-variant">
+                    <div class="p-2 bg-secondary/10 rounded-lg text-secondary">
+                        <span class="material-symbols-outlined">badge</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Student ID</p>
+                        <p id="profile-id" class="text-sm font-semibold text-on-surface">---</p>
+                    </div>
+                </div>
+
+                <div class="p-4 flex items-center gap-4 border-b border-surface-variant">
+                    <div class="p-2 bg-tertiary/10 rounded-lg text-tertiary">
+                        <span class="material-symbols-outlined">menu_book</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Course</p>
+                        <p id="profile-course" class="text-sm font-semibold text-on-surface">---</p>
+                    </div>
+                </div>
+
+                <div class="p-4 flex items-center gap-4">
+                    <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                        <span class="material-symbols-outlined">smartphone</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Mobile</p>
+                        <p id="profile-mobile" class="text-sm font-semibold text-on-surface">---</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3 mb-8">
+                <button class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant">settings</span>
+                        <span class="font-semibold text-sm text-on-surface">App Settings</span>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+                </button>
+
+                <button onclick="logout()" class="w-full bg-error-container/50 border border-error/20 p-4 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform mt-6">
+                    <span class="material-symbols-outlined text-error">logout</span>
+                    <span class="font-bold text-sm text-error">Sign Out</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-surface/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-t-3xl border-t-[0.5px] border-surface-variant tonal-shift bg-surface-container-low dark:bg-slate-800 shadow-[0_-4px_32px_rgba(0,0,0,0.04)] z-50">
+        
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex flex-col items-center justify-center bg-[#006e1c] dark:bg-[#4caf50] text-white rounded-2xl px-4 py-1.5 transition-all active:scale-90 duration-200">
+            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+            <span class="text-[10px] font-medium font-['Inter'] mt-0.5">Dashboard</span>
+        </button>
+        
+        <button onclick="openApp('/EcoCampus/elearning')" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
+            <span class="material-symbols-outlined text-[22px]">school</span>
+            <span class="text-[10px] font-medium font-['Inter'] mt-0.5">Learning</span>
+        </button>
+        
+        <button onclick="openApp('/EcoCampus/efinance')" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
+            <span class="material-symbols-outlined text-[22px]">payments</span>
+            <span class="text-[10px] font-medium font-['Inter'] mt-0.5">Finance</span>
+        </button>
+        
+        <button onclick="switchTab('profile')" id="nav-profile" class="nav-item flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
+            <span class="material-symbols-outlined text-[22px]">person</span>
+            <span class="text-[10px] font-medium font-['Inter'] mt-0.5">Profile</span>
+        </button>
+        
+    </nav>
 
 </body>
 </html>
