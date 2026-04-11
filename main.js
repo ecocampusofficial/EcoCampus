@@ -36,6 +36,42 @@ themeToggles.forEach(btn => {
     });
 });
 
+// View Switcher Logic
+function switchView(viewId, navElement) {
+    // Hide all views
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    // Show target view
+    document.getElementById(`${viewId}-view`).classList.add('active');
+    
+    // Update active state on nav items
+    document.querySelectorAll('.nav-menu .nav-item').forEach(el => el.classList.remove('active'));
+    if(navElement) navElement.classList.add('active');
+
+    // On mobile, close sidebar after clicking
+    if(window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('open');
+    }
+}
+
+// Notification Panel Logic
+const notifBtn = document.getElementById('notif-btn');
+const notifPanel = document.getElementById('notif-panel');
+
+if(notifBtn && notifPanel) {
+    notifBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent document click from immediately closing it
+        notifPanel.classList.toggle('show');
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!notifPanel.contains(e.target) && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
+}
+
 // Mobile Sidebar Drawer Logic
 const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 const sidebar = document.getElementById('sidebar');
@@ -73,6 +109,9 @@ async function checkAuth() {
     } else {
         authActions.innerHTML = ""; 
         authRequiredElements.forEach(el => el.style.display = "flex"); 
+        
+        document.querySelector('.notification-wrapper').style.display = 'block';
+
         fetchUserProfile(session.user.id, session.user.email);
     }
 }
@@ -81,34 +120,40 @@ async function fetchUserProfile(authUserId, fallbackEmail) {
     try {
         const { data: userProfile, error } = await sb
             .from('users')
-            .select('full_name, profile_img_url, role, course, student_id') 
+            .select('full_name, profile_img_url, role, course, student_id, email') 
             .eq('auth_user_id', authUserId)
             .single();
 
-        if (error) {
-            console.error("Supabase Error:", error.message);
-            // Even if RLS fails, we fallback gracefully
-            document.getElementById('user-name').innerText = fallbackEmail;
-            return; 
-        }
+        if (error) throw error; 
 
         if (userProfile) {
-            document.getElementById('user-name').innerText = userProfile.full_name || fallbackEmail;
+            const name = userProfile.full_name || fallbackEmail;
+            const role = userProfile.role || 'Student';
+            
+            // 1. Update Sidebar
+            document.getElementById('user-name').innerText = name;
+            document.getElementById('user-role').innerText = role;
             
             if (userProfile.profile_img_url) {
                 document.getElementById('profile-img').src = userProfile.profile_img_url;
-            }
-            if (userProfile.role) {
-                document.getElementById('user-role').innerText = userProfile.role;
+                // Update Full Profile Image too
+                document.getElementById('full-profile-img').src = userProfile.profile_img_url;
             }
             
             const metaInfo = [];
             if(userProfile.course) metaInfo.push(userProfile.course);
             if(userProfile.student_id) metaInfo.push(userProfile.student_id);
             document.getElementById('user-meta').innerText = metaInfo.join(' • ');
+
+            // 2. Update Full Profile View
+            document.getElementById('full-profile-name').innerText = name;
+            document.getElementById('full-profile-role').innerText = role;
+            document.getElementById('full-profile-email').innerText = userProfile.email || fallbackEmail;
+            document.getElementById('full-profile-course').innerText = userProfile.course || 'Not Assigned';
+            document.getElementById('full-profile-id').innerText = userProfile.student_id || 'Not Assigned';
         }
     } catch (err) {
-        console.error("Catch Block - Error fetching profile:", err.message);
+        console.error("Error fetching profile:", err.message);
         document.getElementById('user-name').innerText = fallbackEmail;
     }
 }
