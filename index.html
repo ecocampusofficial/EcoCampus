@@ -78,9 +78,9 @@
         }
     </script>
 </head>
-<body class="bg-surface text-on-surface antialiased mb-24 relative">
+<body class="bg-surface text-on-surface antialiased mb-24 relative overflow-x-hidden">
 
-    <header class="fixed top-0 w-full z-[60] bg-surface/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-surface-variant/50 bg-surface-container-low dark:bg-slate-800">
+    <header class="fixed top-0 w-full z-[40] bg-surface/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-surface-variant/50 bg-surface-container-low dark:bg-slate-800">
         <div class="flex justify-between items-center px-6 h-16 w-full max-w-screen-xl mx-auto relative">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container bg-surface-variant">
@@ -100,56 +100,58 @@
         </div>
     </header>
 
-    <div id="notif-panel" class="fixed top-16 right-4 w-80 max-w-[calc(100vw-32px)] bg-surface-container-lowest rounded-2xl shadow-xl border border-surface-variant overflow-hidden z-[55] opacity-0 pointer-events-none transition-all duration-200 transform -translate-y-2">
-        <div class="p-4 border-b border-surface-variant flex justify-between items-center bg-surface-container-low">
-            <h3 class="font-bold text-on-surface">Notifications</h3>
-            <span class="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded-md font-bold uppercase">2 New</span>
+    <div id="full-notif-panel" class="fixed inset-0 z-[100] bg-surface transition-transform duration-300 translate-x-full flex flex-col">
+        <div class="h-16 border-b border-surface-variant flex items-center px-4 bg-surface-container-low shrink-0 shadow-sm">
+            <button id="close-notif-btn" class="p-2 mr-2 rounded-full hover:bg-surface-variant active:scale-95 transition-transform text-on-surface">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h2 class="text-lg font-bold text-on-surface flex-1">Notifications</h2>
+            <span class="text-[10px] bg-primary/10 text-primary px-3 py-1 rounded-md font-bold uppercase tracking-wider">2 New</span>
         </div>
-        <div class="max-h-80 overflow-y-auto">
-            <div class="p-4 border-b border-surface-variant hover:bg-surface-container-low cursor-pointer bg-primary/5">
-                <div class="flex gap-3">
-                    <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-sm">eco</span>
+        
+        <div class="flex-1 overflow-y-auto">
+            <div class="p-5 border-b border-surface-variant active:bg-surface-container-low cursor-pointer bg-primary/5">
+                <div class="flex gap-4">
+                    <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">eco</span>
                     </div>
                     <div>
-                        <p class="text-sm text-on-surface"><span class="font-bold">Zero-Waste Week</span> starts tomorrow! Log your activities to earn double EcoPoints.</p>
-                        <span class="text-xs text-on-surface-variant mt-1 block">10 mins ago</span>
+                        <p class="text-[15px] text-on-surface leading-snug"><span class="font-bold">Zero-Waste Week</span> starts tomorrow! Log your activities to earn double EcoPoints.</p>
+                        <span class="text-xs text-on-surface-variant mt-2 block font-medium">10 mins ago</span>
                     </div>
                 </div>
             </div>
-            <div class="p-4 border-b border-surface-variant hover:bg-surface-container-low cursor-pointer bg-primary/5">
-                <div class="flex gap-3">
-                    <div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-sm">payments</span>
+            <div class="p-5 border-b border-surface-variant active:bg-surface-container-low cursor-pointer bg-primary/5">
+                <div class="flex gap-4">
+                    <div class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">payments</span>
                     </div>
                     <div>
-                        <p class="text-sm text-on-surface"><span class="font-bold">₹400 deducted</span> at Campus Cafeteria via EFinance.</p>
-                        <span class="text-xs text-on-surface-variant mt-1 block">2 hours ago</span>
+                        <p class="text-[15px] text-on-surface leading-snug"><span class="font-bold">₹400 deducted</span> at Campus Cafeteria via EFinance.</p>
+                        <span class="text-xs text-on-surface-variant mt-2 block font-medium">2 hours ago</span>
                     </div>
                 </div>
             </div>
-            <div class="p-4 border-b border-surface-variant hover:bg-surface-container-low cursor-pointer">
-                <div class="flex gap-3">
-                    <div class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-sm">assignment</span>
+            <div class="p-5 border-b border-surface-variant active:bg-surface-container-low cursor-pointer">
+                <div class="flex gap-4">
+                    <div class="w-12 h-12 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">assignment</span>
                     </div>
                     <div>
-                        <p class="text-sm text-on-surface"><span class="font-bold">Hostel Renewal Form</span> is pending. Due in 2 days.</p>
-                        <span class="text-xs text-on-surface-variant mt-1 block">Yesterday</span>
+                        <p class="text-[15px] text-on-surface leading-snug"><span class="font-bold">Hostel Renewal Form</span> is pending. Due in 2 days.</p>
+                        <span class="text-xs text-on-surface-variant mt-2 block font-medium">Yesterday</span>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="p-3 text-center border-t border-surface-variant bg-surface-container-low cursor-pointer hover:bg-surface-variant">
-            <span class="text-sm font-bold text-primary">Mark all as read</span>
         </div>
     </div>
 
     <main class="pt-20 px-6 max-w-screen-md mx-auto relative z-10">
         
         <div id="view-dashboard" class="tab-content active">
-            <section class="mt-4 mb-8">
-                <div onclick="openApp('/EcoCampus/ecovities')" class="cursor-pointer active:scale-[0.98] transition-transform relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-primary-container p-6 text-white shadow-2xl shadow-primary/20 group">
+            
+            <section class="mt-4 mb-6">
+                <div onclick="openApp('/EcoCampus/ecovities')" class="cursor-pointer active:scale-[0.98] transition-transform relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary-container p-6 text-white shadow-lg shadow-primary/20 group">
                     <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
                     <div class="absolute -left-4 -bottom-4 w-24 h-24 bg-black/5 rounded-full blur-xl"></div>
                     <div class="relative z-10 flex justify-between items-start">
@@ -167,89 +169,97 @@
                             <span class="text-xs font-bold">5 Days</span>
                         </div>
                     </div>
-                    <div class="relative z-10 mt-8 grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] uppercase opacity-70 tracking-widest">Current Rank</span>
-                            <span class="text-lg font-bold">#12 <span class="text-xs font-normal opacity-70">in campus</span></span>
+                </div>
+            </section>
+
+            <section class="mb-6">
+                <div class="bg-surface-container-lowest rounded-2xl p-5 border border-surface-variant shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="openApp('/EcoCampus/eschedule')">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold text-on-surface-variant tracking-widest uppercase">ESchedule</span>
+                        <span class="material-symbols-outlined text-primary">calendar_today</span>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-extrabold text-on-surface tracking-tight">Climate Ethics 101</h3>
+                        <p class="text-sm text-on-surface-variant mt-0.5">Lounge B • 14:30 - 15:45</p>
+                        <div class="flex items-center gap-4 mt-4">
+                            <div class="flex-1 bg-surface-variant h-2 rounded-full overflow-hidden">
+                                <div class="bg-primary h-full w-[65%] rounded-full"></div>
+                            </div>
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider">In 45m</span>
                         </div>
-                        <div class="flex flex-col items-end">
-                            <span class="text-[10px] uppercase opacity-70 tracking-widest">Next Goal</span>
-                            <span class="text-lg font-bold">1,500 <span class="text-xs font-normal opacity-70">pts</span></span>
+                    </div>
+                    
+                    <hr class="border-surface-variant my-4">
+                    
+                    <div>
+                        <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2 block">Upcoming</span>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-sm font-bold text-on-surface">Database Systems</h4>
+                                <p class="text-xs text-on-surface-variant mt-0.5">Lab 402 • 16:00 - 17:30</p>
+                            </div>
+                            <span class="material-symbols-outlined text-on-surface-variant text-sm">arrow_forward_ios</span>
                         </div>
                     </div>
                 </div>
             </section>
 
             <section class="grid grid-cols-2 gap-4 mb-6">
-                <div onclick="switchTab('learning')" class="col-span-2 cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-lowest rounded-xl p-5 shadow-[0_4px_32px_rgba(0,0,0,0.04)] flex flex-col justify-between min-h-[160px] group border border-surface-variant">
-                    <div class="flex justify-between items-start">
-                        <div class="p-2.5 bg-primary/10 rounded-lg">
-                            <span class="material-symbols-outlined text-primary">school</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-2xl font-bold text-on-surface">65%</span>
-                            <p class="text-[10px] text-on-surface-variant font-medium">Completion</p>
-                        </div>
+                
+                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform" onclick="openApp('/EcoCampus/ebots')">
+                    <div class="w-12 h-12 rounded-xl bg-[#4caf50] text-white flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined">smart_toy</span>
                     </div>
-                    <div class="mt-4 flex justify-between items-end">
-                        <div class="w-full">
-                            <h3 class="text-sm font-bold text-on-surface flex items-center gap-1">E-Learning <span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span></h3>
-                            <p class="text-xs text-on-surface-variant mt-1">3 Active Courses</p>
-                            <div class="w-full bg-surface-container h-1.5 rounded-full mt-3">
-                                <div class="bg-primary h-full rounded-full" style="width: 65%"></div>
-                            </div>
-                        </div>
+                    <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">EBots</span>
+                    <h3 class="text-sm font-bold text-on-surface mt-0.5">Ask EcoAI</h3>
+                </div>
+
+                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform" onclick="openApp('/EcoCampus/eforms')">
+                    <div class="w-12 h-12 rounded-xl bg-[#8b5cf6] text-white flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined">description</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">EForms</span>
+                    <h3 class="text-sm font-bold text-tertiary mt-0.5" style="color: #b45309;">2 Pending</h3>
+                </div>
+
+                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform flex flex-col justify-between" onclick="switchTab('learning')">
+                    <span class="material-symbols-outlined text-primary mb-2 text-2xl">school</span>
+                    <div>
+                        <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">E-Learning</span>
+                        <h3 class="text-base font-bold text-on-surface mt-0.5">82% Overall</h3>
+                        <p class="text-[10px] text-on-surface-variant mt-1">3 active courses</p>
                     </div>
                 </div>
 
-                <div onclick="switchTab('finance')" class="cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-low rounded-xl p-5 flex flex-col justify-between group border border-surface-variant">
-                    <div class="flex justify-between items-start">
-                        <div class="p-2.5 bg-secondary/10 rounded-lg w-fit">
-                            <span class="material-symbols-outlined text-secondary">payments</span>
-                        </div>
-                        <span class="material-symbols-outlined text-sm text-on-surface-variant opacity-0 group-hover:opacity-100">arrow_forward</span>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-xs font-bold text-on-surface-variant">E-Finance</h3>
-                        <div class="mt-1">
-                            <span class="text-lg font-bold text-on-surface">₹2,450</span>
-                            <p class="text-[10px] text-on-surface-variant leading-tight">Allowance Left</p>
-                        </div>
+                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform flex flex-col justify-between" onclick="openApp('/EcoCampus/ecount')">
+                    <span class="material-symbols-outlined text-primary mb-2 text-2xl">bar_chart</span>
+                    <div>
+                        <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">ECount</span>
+                        <h3 class="text-base font-bold text-on-surface mt-0.5">94.5% Att.</h3>
+                        <p class="text-[10px] font-bold text-primary uppercase mt-1 tracking-wider">Perfect Week</p>
                     </div>
                 </div>
 
-                <div onclick="openApp('/EcoCampus/ecount')" class="cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-low rounded-xl p-5 flex flex-col justify-between group border border-surface-variant">
-                    <div class="flex justify-between items-start">
-                        <div class="p-2.5 bg-tertiary-container/10 rounded-lg w-fit">
-                            <span class="material-symbols-outlined text-tertiary">fingerprint</span>
-                        </div>
-                        <span class="material-symbols-outlined text-sm text-on-surface-variant opacity-0 group-hover:opacity-100">open_in_new</span>
+            </section>
+
+            <section class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform flex items-center gap-3" onclick="switchTab('finance')">
+                    <div class="w-10 h-10 rounded-full bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-sm">account_balance_wallet</span>
                     </div>
-                    <div class="mt-4">
-                        <h3 class="text-xs font-bold text-on-surface-variant">E-Count</h3>
-                        <div class="mt-1">
-                            <span class="text-lg font-bold text-on-surface">88%</span>
-                            <p class="text-[10px] text-on-surface-variant leading-tight">Overall Attendance</p>
-                        </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-on-surface">EFinance</h3>
+                        <p class="text-[10px] text-on-surface-variant mt-0.5">Manage Wallet</p>
                     </div>
                 </div>
-
-                <div onclick="openApp('/EcoCampus/eschedule')" class="col-span-2 cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-highest rounded-xl p-5 flex items-center gap-4 group border border-surface-variant">
-                    <div class="p-3 bg-white rounded-xl shadow-sm">
-                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform flex items-center gap-3" onclick="openApp('/EcoCampus/emedia')">
+                    <div class="w-10 h-10 rounded-full bg-error/10 text-error flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-sm">photo_library</span>
                     </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-sm font-bold text-on-surface flex items-center gap-1">ESchedule</h3>
-                            <span class="text-[10px] font-bold text-primary uppercase tracking-tighter bg-primary/10 px-2 py-0.5 rounded">Next Up</span>
-                        </div>
-                        <div class="flex justify-between items-end mt-1">
-                            <div>
-                                <p class="text-xs text-on-surface-variant">Lab 402 • Applied Science</p>
-                                <p class="text-sm font-semibold text-on-surface">11:30 AM — 01:00 PM</p>
-                            </div>
-                            <span class="material-symbols-outlined text-on-surface-variant text-sm group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
-                        </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-on-surface">EMedia</h3>
+                        <p class="text-[10px] text-on-surface-variant mt-0.5">Campus Feed</p>
                     </div>
                 </div>
             </section>
@@ -257,7 +267,6 @@
 
         <div id="view-learning" class="tab-content">
             <h2 class="text-2xl font-extrabold text-on-surface mb-6 mt-4">My Courses</h2>
-            
             <div class="bg-surface-container-lowest rounded-2xl p-5 mb-4 shadow-sm border border-surface-variant relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-bl-full"></div>
                 <div class="flex justify-between items-start mb-3 relative z-10">
@@ -266,32 +275,9 @@
                         <h3 class="text-lg font-bold text-on-surface mt-2 leading-tight">Green Energy 101</h3>
                         <p class="text-xs text-on-surface-variant mt-1">Dr. Sharma • 4 Modules left</p>
                     </div>
-                    <div class="w-12 h-12 rounded-full border-[4px] border-surface-variant flex items-center justify-center relative">
-                        <svg class="absolute w-full h-full transform -rotate-90 text-primary">
-                            <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="22" class="opacity-100"></circle>
-                        </svg>
-                        <span class="text-[10px] font-bold text-on-surface">80%</span>
-                    </div>
                 </div>
                 <button class="w-full mt-2 bg-primary text-on-primary py-2.5 rounded-xl font-semibold text-sm active:scale-[0.98] transition-transform">Continue Learning</button>
             </div>
-
-            <div class="bg-surface-container-lowest rounded-2xl p-5 mb-8 shadow-sm border border-surface-variant">
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <span class="text-[10px] font-bold text-secondary uppercase tracking-wider bg-secondary/10 px-2 py-1 rounded-md">In Progress</span>
-                        <h3 class="text-lg font-bold text-on-surface mt-2 leading-tight">Sustainable Arch.</h3>
-                        <p class="text-xs text-on-surface-variant mt-1">Prof. Mehta • 12 Modules left</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-lg font-bold text-on-surface">45%</span>
-                    </div>
-                </div>
-                <div class="w-full bg-surface-variant h-2 rounded-full overflow-hidden">
-                    <div class="bg-secondary h-full rounded-full" style="width: 45%"></div>
-                </div>
-            </div>
-
             <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4">Upcoming Assessments</h3>
             <div class="bg-surface-container-low rounded-2xl p-4 border border-surface-variant mb-3 flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl bg-error-container text-on-error-container flex flex-col items-center justify-center shrink-0">
@@ -307,7 +293,6 @@
 
         <div id="view-finance" class="tab-content">
             <h2 class="text-2xl font-extrabold text-on-surface mb-6 mt-4">My Wallet</h2>
-
             <div class="bg-secondary text-on-secondary rounded-3xl p-6 mb-8 relative overflow-hidden shadow-lg shadow-secondary/20">
                 <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
                 <p class="text-xs font-medium opacity-80 tracking-wide uppercase">Available Allowance</p>
@@ -323,27 +308,9 @@
                     </div>
                 </div>
             </div>
-
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <button class="bg-surface-container-lowest border border-surface-variant p-4 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform shadow-sm">
-                    <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                        <span class="material-symbols-outlined">add</span>
-                    </div>
-                    <span class="text-xs font-bold text-on-surface">Add Funds</span>
-                </button>
-                <button class="bg-surface-container-lowest border border-surface-variant p-4 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform shadow-sm">
-                    <div class="w-10 h-10 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center">
-                        <span class="material-symbols-outlined">qr_code_scanner</span>
-                    </div>
-                    <span class="text-xs font-bold text-on-surface">Pay/Scan</span>
-                </button>
-            </div>
-
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Recent Transactions</h3>
-                <span class="text-xs font-bold text-primary cursor-pointer">View All</span>
             </div>
-
             <div class="space-y-3">
                 <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant flex justify-between items-center">
                     <div class="flex items-center gap-3">
@@ -356,32 +323,6 @@
                         </div>
                     </div>
                     <span class="font-bold text-error">-₹400</span>
-                </div>
-
-                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-error-container text-on-error-container flex items-center justify-center">
-                            <span class="material-symbols-outlined text-sm">menu_book</span>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-on-surface">Library Late Fee</p>
-                            <p class="text-[10px] text-on-surface-variant mt-0.5">Yesterday</p>
-                        </div>
-                    </div>
-                    <span class="font-bold text-error">-₹150</span>
-                </div>
-
-                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center">
-                            <span class="material-symbols-outlined text-sm">account_balance_wallet</span>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-on-surface">Allowance Added</p>
-                            <p class="text-[10px] text-on-surface-variant mt-0.5">Oct 1st</p>
-                        </div>
-                    </div>
-                    <span class="font-bold text-primary">+₹3,000</span>
                 </div>
             </div>
         </div>
@@ -423,25 +364,49 @@
                         <p id="profile-course" class="text-sm font-semibold text-on-surface">---</p>
                     </div>
                 </div>
-                <div class="p-4 flex items-center gap-4">
-                    <div class="p-2 bg-primary/10 rounded-lg text-primary">
-                        <span class="material-symbols-outlined">smartphone</span>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Mobile</p>
-                        <p id="profile-mobile" class="text-sm font-semibold text-on-surface">---</p>
-                    </div>
-                </div>
             </div>
 
             <div class="space-y-3 mb-8">
+                <div class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant">dark_mode</span>
+                        <span class="font-semibold text-sm text-on-surface">Dark Theme</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="theme-toggle-switch" class="sr-only peer">
+                        <div class="w-11 h-6 bg-surface-variant rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                    </label>
+                </div>
+
                 <button class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-on-surface-variant">settings</span>
-                        <span class="font-semibold text-sm text-on-surface">App Settings</span>
+                        <span class="font-semibold text-sm text-on-surface">General Settings</span>
                     </div>
                     <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
                 </button>
+                <button class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant">lock_reset</span>
+                        <span class="font-semibold text-sm text-on-surface">Change Password</span>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+                </button>
+                <button class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant">info</span>
+                        <span class="font-semibold text-sm text-on-surface">About EcoCampus</span>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+                </button>
+                <button class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant">help_center</span>
+                        <span class="font-semibold text-sm text-on-surface">Help & Support</span>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+                </button>
+
                 <button onclick="logout()" class="w-full bg-error-container/50 border border-error/20 p-4 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform mt-6">
                     <span class="material-symbols-outlined text-error">logout</span>
                     <span class="font-bold text-sm text-error">Sign Out</span>
@@ -451,7 +416,7 @@
 
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-surface/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-t-3xl border-t-[0.5px] border-surface-variant tonal-shift bg-surface-container-low dark:bg-slate-800 shadow-[0_-4px_32px_rgba(0,0,0,0.04)] z-50">
+    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-surface/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-t-3xl border-t-[0.5px] border-surface-variant tonal-shift bg-surface-container-low dark:bg-slate-800 shadow-[0_-4px_32px_rgba(0,0,0,0.04)] z-[40]">
         
         <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex flex-col items-center justify-center bg-[#006e1c] dark:bg-[#4caf50] text-white rounded-2xl px-4 py-1.5 transition-all active:scale-90 duration-200">
             <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
