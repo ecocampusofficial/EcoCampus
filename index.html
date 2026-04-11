@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EcoCampus</title>
+    <title>EcoCampus - Dashboard</title>
 
     <link rel="stylesheet" href="style.css">
-    
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="supabase.js"></script>
     <script src="main.js" defer></script>
 </head>
@@ -27,7 +24,7 @@
                 <div class="profile-info">
                     <h3 id="user-name">Loading...</h3>
                     <p id="user-role" class="role">Student</p>
-                    <p id="user-points" class="points"><i data-lucide="leaf"></i> <span>0 EcoPoints</span></p>
+                    <p id="user-meta" class="meta-text"></p>
                 </div>
             </div>
 
@@ -60,79 +57,102 @@
 
                 <div class="topbar-right">
                     <div id="auth-actions" class="login-container"></div>
-                    
-                    <div class="points-badge auth-required" id="mobile-points-badge" style="display: none;">
-                        <i data-lucide="leaf" style="color: #10b981; width: 18px; height: 18px;"></i> 
-                        <span id="mobile-user-points">0</span>
                     </div>
-                </div>
             </header>
 
             <div class="content-container">
-                <div class="apps">
-                    <div class="card" onclick="openApp('/EcoCampus/ecovities')">
-                        <div class="card-icon green"><i data-lucide="recycle"></i></div>
-                        <div class="card-content">
+                <h2 class="section-title">Overview</h2>
+                
+                <div class="dashboard-grid">
+                    
+                    <div class="widget-card" onclick="openApp('/EcoCampus/ecovities')">
+                        <div class="widget-header">
+                            <div class="card-icon green"><i data-lucide="recycle"></i></div>
                             <h3>EcoVities</h3>
-                            <p>Log green habits and earn points.</p>
+                        </div>
+                        <div class="widget-body">
+                            <span class="stat-value">1,250</span>
+                            <span class="stat-label">Eco Points Balance</span>
                         </div>
                     </div>
 
-                    <div class="card" onclick="openApp('/EcoCampus/ebots')">
-                        <div class="card-icon blue"><i data-lucide="bot"></i></div>
-                        <div class="card-content">
-                            <h3>EBots</h3>
-                            <p>AI assistants for campus help.</p>
-                        </div>
-                    </div>
-
-                    <div class="card" onclick="openApp('/EcoCampus/eforms')">
-                        <div class="card-icon purple"><i data-lucide="file-text"></i></div>
-                        <div class="card-content">
+                    <div class="widget-card" onclick="openApp('/EcoCampus/eforms')">
+                        <div class="widget-header">
+                            <div class="card-icon purple"><i data-lucide="file-text"></i></div>
                             <h3>EForms</h3>
-                            <p>Digital applications & feedback.</p>
+                        </div>
+                        <div class="widget-body">
+                            <span class="stat-value">2</span>
+                            <span class="stat-label">Forms Remaining to Fill</span>
                         </div>
                     </div>
 
-                    <div class="card" onclick="openApp('/EcoCampus/elearning')">
-                        <div class="card-icon orange"><i data-lucide="graduation-cap"></i></div>
-                        <div class="card-content">
-                            <h3>E-learning</h3>
-                            <p>Course materials & certifications.</p>
+                    <div class="widget-card" onclick="openApp('/EcoCampus/elearning')">
+                        <div class="widget-header">
+                            <div class="card-icon orange"><i data-lucide="graduation-cap"></i></div>
+                            <h3>E-Learning</h3>
+                        </div>
+                        <div class="widget-body">
+                            <span class="stat-value">3</span>
+                            <span class="stat-label">Ongoing Courses</span>
                         </div>
                     </div>
 
-                    <div class="card" onclick="openApp('/EcoCampus/emedia')">
-                        <div class="card-icon red"><i data-lucide="image"></i></div>
-                        <div class="card-content">
-                            <h3>EMedia</h3>
-                            <p>Campus news and media posts.</p>
-                        </div>
-                    </div>
-
-                    <div class="card" onclick="openApp('/EcoCampus/ecount')">
-                        <div class="card-icon teal"><i data-lucide="users"></i></div>
-                        <div class="card-content">
+                    <div class="widget-card" onclick="openApp('/EcoCampus/ecount')">
+                        <div class="widget-header">
+                            <div class="card-icon teal"><i data-lucide="users"></i></div>
                             <h3>ECount</h3>
-                            <p>Automated attendance tracking.</p>
+                        </div>
+                        <div class="widget-body">
+                            <span class="stat-value">88%</span>
+                            <span class="stat-label">Overall Attendance</span>
                         </div>
                     </div>
 
-                    <div class="card" onclick="openApp('/EcoCampus/efinance')">
-                        <div class="card-icon gold"><i data-lucide="wallet"></i></div>
-                        <div class="card-content">
-                            <h3>EFinance</h3>
-                            <p>Manage campus expenses.</p>
-                        </div>
-                    </div>
-
-                    <div class="card" onclick="openApp('/EcoCampus/eschedule')">
-                        <div class="card-icon navy"><i data-lucide="calendar"></i></div>
-                        <div class="card-content">
+                    <div class="widget-card" onclick="openApp('/EcoCampus/eschedule')">
+                        <div class="widget-header">
+                            <div class="card-icon navy"><i data-lucide="calendar"></i></div>
                             <h3>ESchedule</h3>
-                            <p>Daily timetable & reminders.</p>
+                        </div>
+                        <div class="widget-body">
+                            <span class="stat-value highlight-text">11:30 AM</span>
+                            <span class="stat-label">Next: Database Lab</span>
                         </div>
                     </div>
+
+                    <div class="widget-card" onclick="openApp('/EcoCampus/efinance')">
+                        <div class="widget-header">
+                            <div class="card-icon gold"><i data-lucide="wallet"></i></div>
+                            <h3>EFinance</h3>
+                        </div>
+                        <div class="widget-body">
+                            <span class="stat-value">₹2,450</span>
+                            <span class="stat-label">Remaining Budget</span>
+                        </div>
+                    </div>
+
+                    <div class="widget-card" onclick="openApp('/EcoCampus/ebots')">
+                        <div class="widget-header">
+                            <div class="card-icon blue"><i data-lucide="bot"></i></div>
+                            <h3>EBots</h3>
+                        </div>
+                        <div class="widget-body">
+                            <span class="stat-value">4</span>
+                            <span class="stat-label">Active Assistant Bots</span>
+                        </div>
+                    </div>
+
+                    <div class="widget-card" onclick="openApp('/EcoCampus/emedia')">
+                        <div class="widget-header">
+                            <div class="card-icon red"><i data-lucide="image"></i></div>
+                            <h3>EMedia</h3>
+                        </div>
+                        <div class="widget-body">
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">New Educational Posts</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </main>
