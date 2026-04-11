@@ -5,18 +5,14 @@ let currentSession = null;
 // 1. SUPABASE AUTH & PROFILE LOADING
 // ==========================================
 async function checkAuth() {
-    // Check if user is logged in
     const { data: { session } } = await sb.auth.getSession();
     
-    // Redirect to login if no active session
     if (!session) {
         window.location.href = "/EcoCampus/auth/login.html";
         return;
     }
     
     currentSession = session;
-    
-    // If logged in, fetch profile data
     fetchUserProfile(session.user.id, session.user.email);
 }
 
@@ -33,14 +29,14 @@ async function fetchUserProfile(authUserId, fallbackEmail) {
         if (userProfile) {
             const name = userProfile.full_name || fallbackEmail;
             
-            // Populate Header
+            // Header
             document.getElementById('header-name').innerText = name;
             if (userProfile.profile_img_url) {
                 document.getElementById('header-avatar').src = userProfile.profile_img_url;
                 document.getElementById('profile-avatar-large').src = userProfile.profile_img_url;
             }
 
-            // Populate Full Profile Tab
+            // Full Profile Tab
             document.getElementById('profile-name').innerText = name;
             document.getElementById('profile-role').innerText = userProfile.role || 'Student';
             document.getElementById('profile-email').innerHTML = `<span class="material-symbols-outlined text-[16px]">mail</span> ${userProfile.email || fallbackEmail}`;
@@ -55,13 +51,11 @@ async function fetchUserProfile(authUserId, fallbackEmail) {
     }
 }
 
-// Logout Function
 async function logout() {
     await sb.auth.signOut();
     window.location.href = "/EcoCampus/auth/login.html";
 }
 
-// Redirect Function for Cards
 function openApp(path) {
     if (!currentSession) {
         window.location.href = "/EcoCampus/auth/login.html?redirect=" + path;
@@ -75,15 +69,15 @@ function openApp(path) {
 // 2. TAB SWITCHING LOGIC (BOTTOM NAV)
 // ==========================================
 function switchTab(tabName) {
-    // Hide all views
+    // Hide all tab content
     document.querySelectorAll('.tab-content').forEach(el => {
         el.classList.remove('active');
     });
     
-    // Reset all nav icons to unselected state
+    // Reset all nav icons to unselected
     document.querySelectorAll('.nav-item').forEach(el => {
-        el.classList.remove('bg-[#006e1c]', 'dark:bg-[#4caf50]', 'text-white', 'rounded-2xl', 'px-4');
-        el.classList.add('text-slate-500', 'dark:text-slate-400', 'px-4');
+        el.classList.remove('bg-[#006e1c]', 'dark:bg-[#4caf50]', 'text-white', 'rounded-2xl');
+        el.classList.add('text-slate-500', 'dark:text-slate-400');
         el.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24";
     });
 
@@ -99,8 +93,28 @@ function switchTab(tabName) {
     const targetView = document.getElementById('view-' + tabName);
     if (targetView) {
         targetView.classList.add('active');
-        window.scrollTo(0,0); // Scroll to top when switching tabs
+        window.scrollTo(0,0);
     }
+}
+
+// ==========================================
+// 3. NOTIFICATION PANEL LOGIC
+// ==========================================
+const notifBtn = document.getElementById('notif-btn');
+const notifPanel = document.getElementById('notif-panel');
+
+if(notifBtn && notifPanel) {
+    notifBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        notifPanel.classList.toggle('show');
+    });
+
+    // Close when clicking outside of the panel
+    document.addEventListener('click', (e) => {
+        if (!notifPanel.contains(e.target) && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
 }
 
 // ==========================================
