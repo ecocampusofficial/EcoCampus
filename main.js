@@ -21,10 +21,7 @@ function updateThemeUI(theme) {
         const iconSpan = btn.querySelector('.theme-icon');
         
         if(textSpan) textSpan.innerText = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
-        
-        if(iconSpan) {
-            iconSpan.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
-        }
+        if(iconSpan) iconSpan.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
     });
     renderIcons();
 }
@@ -38,6 +35,23 @@ themeToggles.forEach(btn => {
         updateThemeUI(newTheme);
     });
 });
+
+// Mobile Sidebar Drawer Logic
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+if(mobileMenuBtn && sidebar && sidebarOverlay) {
+    mobileMenuBtn.addEventListener('click', () => {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('open');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('open');
+    });
+}
 
 // Authentication and Profile Loading
 async function checkAuth() {
@@ -65,7 +79,6 @@ async function checkAuth() {
 
 async function fetchUserProfile(authUserId, fallbackEmail) {
     try {
-        // Updated to fetch 'course' and 'student_id' based on the schema
         const { data: userProfile, error } = await sb
             .from('users')
             .select('full_name, profile_img_url, role, course, student_id') 
@@ -74,7 +87,9 @@ async function fetchUserProfile(authUserId, fallbackEmail) {
 
         if (error) {
             console.error("Supabase Error:", error.message);
-            throw error; 
+            // Even if RLS fails, we fallback gracefully
+            document.getElementById('user-name').innerText = fallbackEmail;
+            return; 
         }
 
         if (userProfile) {
@@ -87,14 +102,13 @@ async function fetchUserProfile(authUserId, fallbackEmail) {
                 document.getElementById('user-role').innerText = userProfile.role;
             }
             
-            // Format Course and Student ID dynamically from DB
             const metaInfo = [];
             if(userProfile.course) metaInfo.push(userProfile.course);
             if(userProfile.student_id) metaInfo.push(userProfile.student_id);
             document.getElementById('user-meta').innerText = metaInfo.join(' • ');
         }
     } catch (err) {
-        console.error("Error fetching profile.", err.message);
+        console.error("Catch Block - Error fetching profile:", err.message);
         document.getElementById('user-name').innerText = fallbackEmail;
     }
 }
