@@ -36,13 +36,12 @@ async function fetchUserProfile(authUserId, fallbackEmail) {
                 document.getElementById('profile-avatar-large').src = userProfile.profile_img_url;
             }
 
-            // Full Profile Tab
+            // Full Profile Tab Data Mapping
             document.getElementById('profile-name').innerText = name;
             document.getElementById('profile-role').innerText = userProfile.role || 'Student';
             document.getElementById('profile-email').innerHTML = `<span class="material-symbols-outlined text-[16px]">mail</span> ${userProfile.email || fallbackEmail}`;
             document.getElementById('profile-id').innerText = userProfile.student_id || 'Not Assigned';
             document.getElementById('profile-course').innerText = userProfile.course || 'Not Assigned';
-            document.getElementById('profile-mobile').innerText = userProfile.mobile || 'Not Assigned';
         }
     } catch (err) {
         console.error("Error fetching profile:", err.message);
@@ -98,22 +97,46 @@ function switchTab(tabName) {
 }
 
 // ==========================================
-// 3. NOTIFICATION PANEL LOGIC
+// 3. FULL SCREEN NOTIFICATION LOGIC
 // ==========================================
 const notifBtn = document.getElementById('notif-btn');
-const notifPanel = document.getElementById('notif-panel');
+const closeNotifBtn = document.getElementById('close-notif-btn');
+const fullNotifPanel = document.getElementById('full-notif-panel');
 
-if(notifBtn && notifPanel) {
-    notifBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); 
-        notifPanel.classList.toggle('show');
+if(notifBtn && closeNotifBtn && fullNotifPanel) {
+    // Open panel
+    notifBtn.addEventListener('click', () => {
+        fullNotifPanel.classList.remove('translate-x-full');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling underneath
     });
 
-    // Close when clicking outside of the panel
-    document.addEventListener('click', (e) => {
-        if (!notifPanel.contains(e.target) && !notifBtn.contains(e.target)) {
-            notifPanel.classList.remove('show');
-        }
+    // Close panel
+    closeNotifBtn.addEventListener('click', () => {
+        fullNotifPanel.classList.add('translate-x-full');
+        document.body.style.overflow = 'auto'; // Re-enable scroll
+    });
+}
+
+// ==========================================
+// 4. THEME SWITCH LOGIC (APP SETTINGS)
+// ==========================================
+const themeCheckbox = document.getElementById('theme-toggle-switch');
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('ecoCampusTheme') || 'light';
+    document.documentElement.setAttribute('class', savedTheme);
+    
+    // Sync switch UI
+    if(themeCheckbox) {
+        themeCheckbox.checked = (savedTheme === 'dark');
+    }
+}
+
+if(themeCheckbox) {
+    themeCheckbox.addEventListener('change', (e) => {
+        const newTheme = e.target.checked ? 'dark' : 'light';
+        document.documentElement.setAttribute('class', newTheme);
+        localStorage.setItem('ecoCampusTheme', newTheme);
     });
 }
 
@@ -121,5 +144,6 @@ if(notifBtn && notifPanel) {
 // INITIALIZATION
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
+    initTheme();
     checkAuth();
 });
