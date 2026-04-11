@@ -35,10 +35,3 @@ body {
         transform: translateY(0) scale(1); 
     }
 }
-
-/* Notification Panel Visibility Toggle */
-#notif-panel.show {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-}
