@@ -1,4 +1,4 @@
-/* Base styles and tab transitions */
+/* Base styles and Material symbols settings */
 .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
@@ -7,6 +7,12 @@ body {
     font-family: 'Inter', sans-serif; 
     min-height: max(884px, 100dvh);
     -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbar for a cleaner mobile app feel */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
 }
 
 /* Tab Switching Logic */
@@ -22,10 +28,17 @@ body {
 @keyframes fadeIn {
     from { 
         opacity: 0; 
-        transform: translateY(10px); 
+        transform: translateY(10px) scale(0.98); 
     }
     to { 
         opacity: 1; 
-        transform: translateY(0); 
+        transform: translateY(0) scale(1); 
     }
+}
+
+/* Notification Panel Visibility Toggle */
+#notif-panel.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
 }
