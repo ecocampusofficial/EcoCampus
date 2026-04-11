@@ -78,10 +78,10 @@
         }
     </script>
 </head>
-<body class="bg-surface text-on-surface antialiased mb-24">
+<body class="bg-surface text-on-surface antialiased mb-24 relative">
 
-    <header class="fixed top-0 w-full z-50 bg-surface/70 dark:bg-slate-900/70 backdrop-blur-xl no-border bg-surface-container-low dark:bg-slate-800">
-        <div class="flex justify-between items-center px-6 h-16 w-full max-w-screen-xl mx-auto">
+    <header class="fixed top-0 w-full z-[60] bg-surface/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-surface-variant/50 bg-surface-container-low dark:bg-slate-800">
+        <div class="flex justify-between items-center px-6 h-16 w-full max-w-screen-xl mx-auto relative">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container bg-surface-variant">
                     <img id="header-avatar" alt="Profile picture" class="w-full h-full object-cover" src="https://via.placeholder.com/150"/>
@@ -91,8 +91,8 @@
                     <span id="header-name" class="text-sm font-bold text-on-surface">Loading...</span>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <button class="p-2 rounded-full hover:bg-slate-100/50 transition-colors active:scale-95 duration-200 relative">
+            <div class="flex items-center gap-2 relative">
+                <button id="notif-btn" class="p-2 rounded-full hover:bg-slate-100/50 transition-colors active:scale-95 duration-200 relative">
                     <span class="material-symbols-outlined text-slate-500">notifications</span>
                     <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface"></span>
                 </button>
@@ -100,7 +100,52 @@
         </div>
     </header>
 
-    <main class="pt-20 px-6 max-w-screen-md mx-auto">
+    <div id="notif-panel" class="fixed top-16 right-4 w-80 max-w-[calc(100vw-32px)] bg-surface-container-lowest rounded-2xl shadow-xl border border-surface-variant overflow-hidden z-[55] opacity-0 pointer-events-none transition-all duration-200 transform -translate-y-2">
+        <div class="p-4 border-b border-surface-variant flex justify-between items-center bg-surface-container-low">
+            <h3 class="font-bold text-on-surface">Notifications</h3>
+            <span class="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded-md font-bold uppercase">2 New</span>
+        </div>
+        <div class="max-h-80 overflow-y-auto">
+            <div class="p-4 border-b border-surface-variant hover:bg-surface-container-low cursor-pointer bg-primary/5">
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-sm">eco</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-on-surface"><span class="font-bold">Zero-Waste Week</span> starts tomorrow! Log your activities to earn double EcoPoints.</p>
+                        <span class="text-xs text-on-surface-variant mt-1 block">10 mins ago</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-b border-surface-variant hover:bg-surface-container-low cursor-pointer bg-primary/5">
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-sm">payments</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-on-surface"><span class="font-bold">₹400 deducted</span> at Campus Cafeteria via EFinance.</p>
+                        <span class="text-xs text-on-surface-variant mt-1 block">2 hours ago</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-b border-surface-variant hover:bg-surface-container-low cursor-pointer">
+                <div class="flex gap-3">
+                    <div class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-sm">assignment</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-on-surface"><span class="font-bold">Hostel Renewal Form</span> is pending. Due in 2 days.</p>
+                        <span class="text-xs text-on-surface-variant mt-1 block">Yesterday</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 text-center border-t border-surface-variant bg-surface-container-low cursor-pointer hover:bg-surface-variant">
+            <span class="text-sm font-bold text-primary">Mark all as read</span>
+        </div>
+    </div>
+
+    <main class="pt-20 px-6 max-w-screen-md mx-auto relative z-10">
         
         <div id="view-dashboard" class="tab-content active">
             <section class="mt-4 mb-8">
@@ -136,7 +181,7 @@
             </section>
 
             <section class="grid grid-cols-2 gap-4 mb-6">
-                <div onclick="openApp('/EcoCampus/elearning')" class="col-span-2 cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-lowest rounded-xl p-5 shadow-[0_4px_32px_rgba(0,0,0,0.04)] flex flex-col justify-between min-h-[160px] group">
+                <div onclick="switchTab('learning')" class="col-span-2 cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-lowest rounded-xl p-5 shadow-[0_4px_32px_rgba(0,0,0,0.04)] flex flex-col justify-between min-h-[160px] group border border-surface-variant">
                     <div class="flex justify-between items-start">
                         <div class="p-2.5 bg-primary/10 rounded-lg">
                             <span class="material-symbols-outlined text-primary">school</span>
@@ -157,12 +202,12 @@
                     </div>
                 </div>
 
-                <div onclick="openApp('/EcoCampus/efinance')" class="cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-low rounded-xl p-5 flex flex-col justify-between group">
+                <div onclick="switchTab('finance')" class="cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-low rounded-xl p-5 flex flex-col justify-between group border border-surface-variant">
                     <div class="flex justify-between items-start">
                         <div class="p-2.5 bg-secondary/10 rounded-lg w-fit">
                             <span class="material-symbols-outlined text-secondary">payments</span>
                         </div>
-                        <span class="material-symbols-outlined text-sm text-on-surface-variant opacity-0 group-hover:opacity-100">open_in_new</span>
+                        <span class="material-symbols-outlined text-sm text-on-surface-variant opacity-0 group-hover:opacity-100">arrow_forward</span>
                     </div>
                     <div class="mt-4">
                         <h3 class="text-xs font-bold text-on-surface-variant">E-Finance</h3>
@@ -173,7 +218,7 @@
                     </div>
                 </div>
 
-                <div onclick="openApp('/EcoCampus/ecount')" class="cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-low rounded-xl p-5 flex flex-col justify-between group">
+                <div onclick="openApp('/EcoCampus/ecount')" class="cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-low rounded-xl p-5 flex flex-col justify-between group border border-surface-variant">
                     <div class="flex justify-between items-start">
                         <div class="p-2.5 bg-tertiary-container/10 rounded-lg w-fit">
                             <span class="material-symbols-outlined text-tertiary">fingerprint</span>
@@ -189,7 +234,7 @@
                     </div>
                 </div>
 
-                <div onclick="openApp('/EcoCampus/eschedule')" class="col-span-2 cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-highest rounded-xl p-5 flex items-center gap-4 group">
+                <div onclick="openApp('/EcoCampus/eschedule')" class="col-span-2 cursor-pointer active:scale-[0.98] transition-transform bg-surface-container-highest rounded-xl p-5 flex items-center gap-4 group border border-surface-variant">
                     <div class="p-3 bg-white rounded-xl shadow-sm">
                         <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
                     </div>
@@ -210,10 +255,141 @@
             </section>
         </div>
 
+        <div id="view-learning" class="tab-content">
+            <h2 class="text-2xl font-extrabold text-on-surface mb-6 mt-4">My Courses</h2>
+            
+            <div class="bg-surface-container-lowest rounded-2xl p-5 mb-4 shadow-sm border border-surface-variant relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-bl-full"></div>
+                <div class="flex justify-between items-start mb-3 relative z-10">
+                    <div>
+                        <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2 py-1 rounded-md">In Progress</span>
+                        <h3 class="text-lg font-bold text-on-surface mt-2 leading-tight">Green Energy 101</h3>
+                        <p class="text-xs text-on-surface-variant mt-1">Dr. Sharma • 4 Modules left</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full border-[4px] border-surface-variant flex items-center justify-center relative">
+                        <svg class="absolute w-full h-full transform -rotate-90 text-primary">
+                            <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="22" class="opacity-100"></circle>
+                        </svg>
+                        <span class="text-[10px] font-bold text-on-surface">80%</span>
+                    </div>
+                </div>
+                <button class="w-full mt-2 bg-primary text-on-primary py-2.5 rounded-xl font-semibold text-sm active:scale-[0.98] transition-transform">Continue Learning</button>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-2xl p-5 mb-8 shadow-sm border border-surface-variant">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-wider bg-secondary/10 px-2 py-1 rounded-md">In Progress</span>
+                        <h3 class="text-lg font-bold text-on-surface mt-2 leading-tight">Sustainable Arch.</h3>
+                        <p class="text-xs text-on-surface-variant mt-1">Prof. Mehta • 12 Modules left</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-lg font-bold text-on-surface">45%</span>
+                    </div>
+                </div>
+                <div class="w-full bg-surface-variant h-2 rounded-full overflow-hidden">
+                    <div class="bg-secondary h-full rounded-full" style="width: 45%"></div>
+                </div>
+            </div>
+
+            <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4">Upcoming Assessments</h3>
+            <div class="bg-surface-container-low rounded-2xl p-4 border border-surface-variant mb-3 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-error-container text-on-error-container flex flex-col items-center justify-center shrink-0">
+                    <span class="text-[10px] uppercase font-bold">Oct</span>
+                    <span class="text-lg font-black leading-none">12</span>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-on-surface">Mid-Term: Green Energy</h4>
+                    <p class="text-xs text-on-surface-variant mt-0.5">Online Exam • 60 mins</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-finance" class="tab-content">
+            <h2 class="text-2xl font-extrabold text-on-surface mb-6 mt-4">My Wallet</h2>
+
+            <div class="bg-secondary text-on-secondary rounded-3xl p-6 mb-8 relative overflow-hidden shadow-lg shadow-secondary/20">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+                <p class="text-xs font-medium opacity-80 tracking-wide uppercase">Available Allowance</p>
+                <div class="text-5xl font-black mt-1 mb-4">₹2,450</div>
+                <div class="flex justify-between items-center border-t border-white/20 pt-4">
+                    <div>
+                        <p class="text-[10px] uppercase opacity-70">Total Budget</p>
+                        <p class="text-sm font-bold">₹4,000</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase opacity-70">Spent so far</p>
+                        <p class="text-sm font-bold">₹1,550</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <button class="bg-surface-container-lowest border border-surface-variant p-4 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform shadow-sm">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined">add</span>
+                    </div>
+                    <span class="text-xs font-bold text-on-surface">Add Funds</span>
+                </button>
+                <button class="bg-surface-container-lowest border border-surface-variant p-4 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform shadow-sm">
+                    <div class="w-10 h-10 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center">
+                        <span class="material-symbols-outlined">qr_code_scanner</span>
+                    </div>
+                    <span class="text-xs font-bold text-on-surface">Pay/Scan</span>
+                </button>
+            </div>
+
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Recent Transactions</h3>
+                <span class="text-xs font-bold text-primary cursor-pointer">View All</span>
+            </div>
+
+            <div class="space-y-3">
+                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-error-container text-on-error-container flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm">restaurant</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-on-surface">Campus Cafeteria</p>
+                            <p class="text-[10px] text-on-surface-variant mt-0.5">Today, 1:30 PM</p>
+                        </div>
+                    </div>
+                    <span class="font-bold text-error">-₹400</span>
+                </div>
+
+                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-error-container text-on-error-container flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm">menu_book</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-on-surface">Library Late Fee</p>
+                            <p class="text-[10px] text-on-surface-variant mt-0.5">Yesterday</p>
+                        </div>
+                    </div>
+                    <span class="font-bold text-error">-₹150</span>
+                </div>
+
+                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm">account_balance_wallet</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-on-surface">Allowance Added</p>
+                            <p class="text-[10px] text-on-surface-variant mt-0.5">Oct 1st</p>
+                        </div>
+                    </div>
+                    <span class="font-bold text-primary">+₹3,000</span>
+                </div>
+            </div>
+        </div>
+
         <div id="view-profile" class="tab-content">
-            <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-variant text-center relative overflow-hidden mb-6 mt-4">
+            <h2 class="text-2xl font-extrabold text-on-surface mb-6 mt-4">My Profile</h2>
+            <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-surface-variant text-center relative overflow-hidden mb-6">
                 <div class="absolute top-0 left-0 w-full h-24 bg-primary/20"></div>
-                
                 <div class="relative z-10 flex flex-col items-center mt-4">
                     <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-surface shadow-sm mb-4 bg-surface-variant">
                         <img id="profile-avatar-large" alt="User profile" class="w-full h-full object-cover" src="https://via.placeholder.com/150"/>
@@ -229,7 +405,6 @@
             </div>
 
             <div class="bg-surface-container-lowest rounded-2xl border border-surface-variant overflow-hidden mb-6 shadow-sm">
-                
                 <div class="p-4 flex items-center gap-4 border-b border-surface-variant">
                     <div class="p-2 bg-secondary/10 rounded-lg text-secondary">
                         <span class="material-symbols-outlined">badge</span>
@@ -239,7 +414,6 @@
                         <p id="profile-id" class="text-sm font-semibold text-on-surface">---</p>
                     </div>
                 </div>
-
                 <div class="p-4 flex items-center gap-4 border-b border-surface-variant">
                     <div class="p-2 bg-tertiary/10 rounded-lg text-tertiary">
                         <span class="material-symbols-outlined">menu_book</span>
@@ -249,7 +423,6 @@
                         <p id="profile-course" class="text-sm font-semibold text-on-surface">---</p>
                     </div>
                 </div>
-
                 <div class="p-4 flex items-center gap-4">
                     <div class="p-2 bg-primary/10 rounded-lg text-primary">
                         <span class="material-symbols-outlined">smartphone</span>
@@ -269,7 +442,6 @@
                     </div>
                     <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
                 </button>
-
                 <button onclick="logout()" class="w-full bg-error-container/50 border border-error/20 p-4 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform mt-6">
                     <span class="material-symbols-outlined text-error">logout</span>
                     <span class="font-bold text-sm text-error">Sign Out</span>
@@ -279,19 +451,19 @@
 
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-surface/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-t-3xl border-t-[0.5px] border-surface-variant tonal-shift bg-surface-container-low dark:bg-slate-800 shadow-[0_-4px_32px_rgba(0,0,0,0.04)] z-50">
+    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-surface/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-t-3xl border-t-[0.5px] border-surface-variant tonal-shift bg-surface-container-low dark:bg-slate-800 shadow-[0_-4px_32px_rgba(0,0,0,0.04)] z-50">
         
         <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex flex-col items-center justify-center bg-[#006e1c] dark:bg-[#4caf50] text-white rounded-2xl px-4 py-1.5 transition-all active:scale-90 duration-200">
             <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
             <span class="text-[10px] font-medium font-['Inter'] mt-0.5">Dashboard</span>
         </button>
         
-        <button onclick="openApp('/EcoCampus/elearning')" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
+        <button onclick="switchTab('learning')" id="nav-learning" class="nav-item flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
             <span class="material-symbols-outlined text-[22px]">school</span>
             <span class="text-[10px] font-medium font-['Inter'] mt-0.5">Learning</span>
         </button>
         
-        <button onclick="openApp('/EcoCampus/efinance')" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
+        <button onclick="switchTab('finance')" id="nav-finance" class="nav-item flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
             <span class="material-symbols-outlined text-[22px]">payments</span>
             <span class="text-[10px] font-medium font-['Inter'] mt-0.5">Finance</span>
         </button>
