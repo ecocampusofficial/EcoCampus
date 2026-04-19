@@ -40,11 +40,11 @@ function setLoading(button, isLoading) {
 async function handleLogin(event) {
     event.preventDefault();
 
-    const studentId = document.getElementById("login-studentid").value.trim();
+    const identifier = document.getElementById("login-identifier").value.trim();
     const password = document.getElementById("login-password").value;
 
-    if (!studentId || !password) {
-        showMessage("Please enter Student ID and Password");
+    if (!identifier || !password) {
+        showMessage("Please enter Email/Student ID and Password");
         return;
     }
 
@@ -52,38 +52,57 @@ async function handleLogin(event) {
     showMessage("", false);
 
     try {
-        // 🔥 Call Edge Function
-        const { data, error } = await sb.functions.invoke(
-            "hyper-endpoint",
-            {
-                body: { studentId, password }
-            }
-        );
+        if (identifier.includes('@')) {
+            // 🔥 Email Login
+            const { data, error } = await sb.auth.signInWithPassword({
+                email: identifier,
+                password: password,
+            });
 
-        if (error) {
-            console.error("Function error:", error);
-            showMessage("Server error. Try again.");
-            return;
-        }
-
-        if (data?.error) {
-            showMessage(data.error);
-            return;
-        }
-
-        if (data?.session) {
-            // ✅ Set session
-            const { error: sessionError } = await sb.auth.setSession(data.session);
-
-            if (sessionError) {
-                console.error("Session error:", sessionError);
-                showMessage("Login failed. Try again.");
+            if (error) {
+                console.error("Login error:", error);
+                showMessage(error.message || "Invalid email or password.");
                 return;
             }
 
-            // 🎯 Redirect (GitHub Pages safe)
-            window.location.href = "/EcoCampus/";
-            return;
+            if (data?.session) {
+                window.location.href = "/EcoCampus/";
+                return;
+            }
+        } else {
+            // 🔥 Student ID Login via Edge Function
+            const { data, error } = await sb.functions.invoke(
+                "hyper-endpoint",
+                {
+                    body: { studentId: identifier, password }
+                }
+            );
+
+            if (error) {
+                console.error("Function error:", error);
+                showMessage("Server error. Try again.");
+                return;
+            }
+
+            if (data?.error) {
+                showMessage(data.error);
+                return;
+            }
+
+            if (data?.session) {
+                // ✅ Set session
+                const { error: sessionError } = await sb.auth.setSession(data.session);
+
+                if (sessionError) {
+                    console.error("Session error:", sessionError);
+                    showMessage("Login failed. Try again.");
+                    return;
+                }
+
+                // 🎯 Redirect (GitHub Pages safe)
+                window.location.href = "/EcoCampus/";
+                return;
+            }
         }
 
         showMessage("Unexpected error occurred.");
