@@ -69,323 +69,294 @@
                         "primary": "#006e1c"
                     },
                     "fontFamily": {
-                        "headline": ["Inter"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
+                        "headline": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
                     }
                 },
             },
         }
     </script>
 </head>
-<body class="bg-surface text-on-surface antialiased mb-24 relative overflow-x-hidden">
+<body class="bg-surface text-on-surface antialiased mb-24 relative overflow-x-hidden selection:bg-primary/20">
 
-    <header class="fixed top-0 w-full z-[40] bg-surface/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-surface-variant/50 bg-surface-container-low dark:bg-slate-800">
+    <header class="fixed top-0 w-full z-[40] bg-surface/80 dark:bg-[#121212]/80 backdrop-blur-xl border-b border-surface-variant/40 shadow-sm transition-colors duration-300">
         <div class="flex justify-between items-center px-6 h-16 w-full max-w-screen-xl mx-auto relative">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container bg-surface-variant">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-[1.5px] border-primary/30 bg-surface-variant shadow-sm">
                     <img id="header-avatar" alt="Profile picture" class="w-full h-full object-cover" src="https://via.placeholder.com/150"/>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-xs text-on-surface-variant font-medium">Welcome back,</span>
-                    <span id="header-name" class="text-sm font-bold text-on-surface">Loading...</span>
+                <div class="flex flex-col justify-center">
+                    <span class="text-[11px] text-on-surface-variant font-medium tracking-wide uppercase">Welcome back</span>
+                    <span id="header-name" class="text-sm font-bold text-on-surface leading-tight">Loading...</span>
                 </div>
             </div>
             <div class="flex items-center gap-2 relative">
-                <button id="notif-btn" class="p-2 rounded-full hover:bg-slate-100/50 transition-colors active:scale-95 duration-200 relative">
-                    <span class="material-symbols-outlined text-slate-500">notifications</span>
-                    <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface"></span>
+                <button id="notif-btn" class="p-2 rounded-full hover:bg-surface-variant/50 transition-all active:scale-95 duration-200 relative text-on-surface-variant">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-2 right-2.5 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface"></span>
                 </button>
             </div>
         </div>
     </header>
 
-    <div id="full-notif-panel" class="fixed inset-0 z-[100] bg-surface transition-transform duration-300 translate-x-full flex flex-col">
-        <div class="h-16 border-b border-surface-variant flex items-center px-4 bg-surface-container-low shrink-0 shadow-sm">
+    <div id="full-notif-panel" class="fixed inset-0 z-[100] bg-surface dark:bg-[#121212] transition-transform duration-300 translate-x-full flex flex-col">
+        <div class="h-16 border-b border-surface-variant/50 flex items-center px-4 bg-surface/80 backdrop-blur-xl shrink-0">
             <button id="close-notif-btn" class="p-2 mr-2 rounded-full hover:bg-surface-variant active:scale-95 transition-transform text-on-surface">
                 <span class="material-symbols-outlined">arrow_back</span>
             </button>
             <h2 class="text-lg font-bold text-on-surface flex-1">Notifications</h2>
-            <span class="text-[10px] bg-primary/10 text-primary px-3 py-1 rounded-md font-bold uppercase tracking-wider">2 New</span>
+            <span class="text-[10px] bg-primary/10 text-primary px-3 py-1 rounded-full font-bold uppercase tracking-wider">2 New</span>
         </div>
         
         <div class="flex-1 overflow-y-auto">
-            <div class="p-5 border-b border-surface-variant active:bg-surface-container-low cursor-pointer bg-primary/5">
+            <div class="p-5 border-b border-surface-variant/50 active:bg-surface-container-low cursor-pointer bg-primary/5 transition-colors">
                 <div class="flex gap-4">
-                    <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
                         <span class="material-symbols-outlined">eco</span>
                     </div>
                     <div>
-                        <p class="text-[15px] text-on-surface leading-snug"><span class="font-bold">Zero-Waste Week</span> starts tomorrow! Log your activities to earn double EcoPoints.</p>
-                        <span class="text-xs text-on-surface-variant mt-2 block font-medium">10 mins ago</span>
+                        <p class="text-[14px] text-on-surface leading-snug"><span class="font-bold">Zero-Waste Week</span> starts tomorrow! Log your activities to earn double EcoPoints.</p>
+                        <span class="text-[11px] text-on-surface-variant mt-2 block font-medium">10 mins ago</span>
                     </div>
                 </div>
             </div>
-            <div class="p-5 border-b border-surface-variant active:bg-surface-container-low cursor-pointer bg-primary/5">
+            <div class="p-5 border-b border-surface-variant/50 active:bg-surface-container-low cursor-pointer transition-colors">
                 <div class="flex gap-4">
-                    <div class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined">payments</span>
-                    </div>
-                    <div>
-                        <p class="text-[15px] text-on-surface leading-snug"><span class="font-bold">₹400 deducted</span> at Campus Cafeteria via EFinance.</p>
-                        <span class="text-xs text-on-surface-variant mt-2 block font-medium">2 hours ago</span>
-                    </div>
-                </div>
-            </div>
-            <div class="p-5 border-b border-surface-variant active:bg-surface-container-low cursor-pointer">
-                <div class="flex gap-4">
-                    <div class="w-12 h-12 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-surface-variant/50 text-on-surface-variant flex items-center justify-center shrink-0">
                         <span class="material-symbols-outlined">assignment</span>
                     </div>
                     <div>
-                        <p class="text-[15px] text-on-surface leading-snug"><span class="font-bold">Hostel Renewal Form</span> is pending. Due in 2 days.</p>
-                        <span class="text-xs text-on-surface-variant mt-2 block font-medium">Yesterday</span>
+                        <p class="text-[14px] text-on-surface leading-snug"><span class="font-bold">Hostel Renewal Form</span> is pending. Due in 2 days.</p>
+                        <span class="text-[11px] text-on-surface-variant mt-2 block font-medium">Yesterday</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <main class="pt-20 px-6 max-w-screen-md mx-auto relative z-10">
+    <main class="pt-20 px-5 max-w-screen-md mx-auto relative z-10 pb-6">
         
-        <div id="view-dashboard" class="tab-content active">
+        <div id="view-dashboard" class="tab-content active space-y-5">
             
-            <section class="mt-4 mb-6 space-y-4">
-                <div onclick="openApp('/EcoCampus/ecovities')" class="cursor-pointer active:scale-[0.98] transition-transform relative overflow-hidden rounded-2xl bg-[#319b42] p-5 text-white shadow-md">
-                    <div class="flex justify-between items-start mb-2">
-                        <h2 class="text-[15px] font-bold tracking-wide">EcoVities</h2>
-                        <div class="bg-white/20 rounded-lg px-2.5 py-1 flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
-                            <span class="text-xs font-bold">5 Days</span>
-                        </div>
-                    </div>
-                    <div class="flex items-baseline gap-1 mb-5">
-                        <span class="text-[40px] leading-none font-extrabold tracking-tight">1,250</span>
-                        <span class="text-xs font-bold uppercase tracking-widest opacity-90">ECOPOINTS</span>
-                    </div>
-                    <hr class="border-white/20 mb-3">
-                    <div class="flex justify-between items-end">
-                        <div>
-                            <p class="text-[10px] font-bold uppercase tracking-wider opacity-80 mb-0.5">CURRENT RANK</p>
-                            <p class="text-sm font-medium"><span class="text-lg font-bold">#12</span> in campus</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[10px] font-bold uppercase tracking-wider opacity-80 mb-0.5">NEXT GOAL</p>
-                            <p class="text-sm font-medium"><span class="text-lg font-bold">1,500</span> pts</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-surface-container-lowest rounded-2xl p-5 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.98] transition-transform" onclick="openApp('/EcoCampus/elearning')">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="w-10 h-10 rounded-xl bg-[#e8f3ea] text-[#006e1c] flex items-center justify-center">
-                            <span class="material-symbols-outlined text-[20px]">school</span>
-                        </div>
-                        <div class="text-right">
-                            <h3 class="text-xl font-bold text-on-surface leading-none">65%</h3>
-                            <p class="text-[10px] text-on-surface-variant mt-1">Completion</p>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-on-surface">E-Learning</h3>
-                        <p class="text-xs text-on-surface-variant mt-0.5 mb-3">3 Active Courses</p>
-                        <div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
-                            <div class="bg-[#006e1c] h-full w-[65%] rounded-full"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mb-6">
-                <div class="bg-surface-container-lowest rounded-2xl p-5 border border-surface-variant shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="openApp('/EcoCampus/eschedule')">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold text-on-surface-variant tracking-widest uppercase">ESchedule</span>
-                        <span class="material-symbols-outlined text-primary">calendar_today</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-extrabold text-on-surface tracking-tight">Climate Ethics 101</h3>
-                        <p class="text-sm text-on-surface-variant mt-0.5">Lounge B • 14:30 - 15:45</p>
-                        <div class="flex items-center gap-4 mt-4">
-                            <div class="flex-1 bg-surface-variant h-2 rounded-full overflow-hidden">
-                                <div class="bg-primary h-full w-[65%] rounded-full"></div>
+            <section class="mt-2">
+                <div onclick="openApp('/EcoCampus/ecovities')" class="cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#006e1c] to-[#004812] p-6 text-white shadow-lg shadow-primary/20">
+                    <div class="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                    <div class="absolute -left-4 -bottom-4 w-24 h-24 bg-black/10 rounded-full blur-2xl"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <h2 class="text-sm font-semibold tracking-wide flex items-center gap-1.5 opacity-90">
+                                EcoVities
+                            </h2>
+                            <div class="bg-white/20 backdrop-blur-md rounded-full px-3 py-1 flex items-center gap-1.5 border border-white/10">
+                                <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                                <span class="text-[11px] font-bold">5 Days</span>
                             </div>
-                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider">In 45m</span>
                         </div>
-                    </div>
-                    <hr class="border-surface-variant my-4">
-                    <div>
-                        <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2 block">Upcoming</span>
-                        <div class="flex justify-between items-center">
+                        
+                        <div class="flex items-baseline gap-1.5 mb-6">
+                            <span class="text-5xl leading-none font-black tracking-tighter">1,250</span>
+                            <span class="text-xs font-bold uppercase tracking-widest opacity-80">ECOPOINTS</span>
+                        </div>
+                        
+                        <div class="h-[1px] w-full bg-gradient-to-r from-white/20 via-white/10 to-transparent mb-4"></div>
+                        
+                        <div class="flex justify-between items-end">
                             <div>
-                                <h4 class="text-sm font-bold text-on-surface">Database Systems</h4>
-                                <p class="text-xs text-on-surface-variant mt-0.5">Lab 402 • 16:00 - 17:30</p>
+                                <p class="text-[9px] font-bold uppercase tracking-widest opacity-70 mb-1">Current Rank</p>
+                                <p class="text-sm font-medium"><span class="text-lg font-bold">#12</span> in campus</p>
                             </div>
-                            <span class="material-symbols-outlined text-on-surface-variant text-sm">arrow_forward_ios</span>
+                            <div class="text-right">
+                                <p class="text-[9px] font-bold uppercase tracking-widest opacity-70 mb-1">Next Goal</p>
+                                <p class="text-sm font-medium"><span class="text-lg font-bold">1,500</span> pts</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="grid grid-cols-2 gap-4 mb-4">
-                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform" onclick="openApp('/EcoCampus/ebots')">
-                    <div class="w-12 h-12 rounded-xl bg-[#4caf50] text-white flex items-center justify-center mb-3">
-                        <span class="material-symbols-outlined">smart_toy</span>
+            <section>
+                <div class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-3xl p-5 border border-surface-variant/60 shadow-sm cursor-pointer active:scale-[0.98] transition-transform duration-200" onclick="openApp('/EcoCampus/elearning')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                            <span class="material-symbols-outlined text-[24px]">school</span>
+                        </div>
+                        <div class="text-right">
+                            <h3 class="text-2xl font-black text-on-surface leading-none">65%</h3>
+                            <p class="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant mt-1.5">Completion</p>
+                        </div>
                     </div>
-                    <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block mb-0.5">EBots</span>
-                    <h3 class="text-sm font-bold text-on-surface">Ask EcoAI</h3>
-                </div>
-
-                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform" onclick="openApp('/EcoCampus/eforms')">
-                    <div class="w-12 h-12 rounded-xl bg-[#8b5cf6] text-white flex items-center justify-center mb-3">
-                        <span class="material-symbols-outlined">description</span>
-                    </div>
-                    <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block mb-0.5">EForms</span>
-                    <h3 class="text-sm font-bold text-tertiary" style="color: #b45309;">2 Pending</h3>
-                </div>
-
-                <div class="bg-surface-container-lowest rounded-2xl p-4 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform flex flex-col justify-between" onclick="openApp('/EcoCampus/ecount')">
-                    <span class="material-symbols-outlined text-[#006e1c] mb-2 text-[24px]">bar_chart</span>
                     <div>
-                        <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block mb-0.5">ECOUNT</span>
-                        <h3 class="text-base font-bold text-on-surface">94.5% Att.</h3>
-                        <p class="text-[10px] font-bold text-[#006e1c] uppercase mt-1 tracking-wider">PERFECT WEEK</p>
+                        <h3 class="text-[15px] font-bold text-on-surface">E-Learning</h3>
+                        <p class="text-xs text-on-surface-variant mt-0.5 mb-4 font-medium">3 Active Courses</p>
+                        <div class="w-full bg-surface-variant/50 h-2 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[65%] rounded-full shadow-[0_0_10px_rgba(0,110,28,0.4)]"></div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section class="grid grid-cols-2 gap-4 mb-6">
-                <div class="bg-surface-container-lowest rounded-2xl p-3 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform flex items-center gap-3" onclick="openApp('/EcoCampus/efinance')">
-                    <div class="w-10 h-10 rounded-xl bg-[#f0f4ff] text-[#4858ab] flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+            <section>
+                <div class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-3xl p-6 border border-surface-variant/60 shadow-sm active:scale-[0.98] transition-transform duration-200 cursor-pointer" onclick="openApp('/EcoCampus/eschedule')">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase bg-surface-variant/30 px-2 py-1 rounded-md">ESchedule</span>
+                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary text-[16px]">calendar_today</span>
+                        </div>
                     </div>
+                    
                     <div>
-                        <h3 class="text-xs font-bold text-on-surface">EFinance</h3>
-                        <p class="text-[10px] text-on-surface-variant mt-0.5">Manage Wallet</p>
+                        <h3 class="text-[20px] font-extrabold text-on-surface tracking-tight leading-tight">Climate Ethics 101</h3>
+                        <p class="text-[13px] font-medium text-on-surface-variant mt-1 flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[14px]">location_on</span> Lounge B • 14:30 - 15:45
+                        </p>
+                        <div class="flex items-center gap-4 mt-5 bg-surface-variant/20 p-3 rounded-2xl">
+                            <div class="flex-1 bg-surface-variant/60 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-primary h-full w-[65%] rounded-full relative">
+                                    <div class="absolute right-0 top-0 bottom-0 w-4 bg-white/30 rounded-full animate-pulse"></div>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-widest whitespace-nowrap">Starts in 45m</span>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="bg-surface-container-lowest rounded-2xl p-3 border border-surface-variant shadow-sm cursor-pointer active:scale-[0.96] transition-transform flex items-center gap-3" onclick="openApp('/EcoCampus/emedia')">
-                    <div class="w-10 h-10 rounded-xl bg-[#fff0f0] text-[#ba1a1a] flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[18px]">photo_library</span>
+            </section>
+
+            <section class="grid grid-cols-2 gap-4">
+                <div class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-3xl p-5 border border-surface-variant/60 shadow-sm cursor-pointer active:scale-[0.96] transition-transform duration-200" onclick="openApp('/EcoCampus/ebots')">
+                    <div class="w-12 h-12 rounded-2xl bg-[#e8f5e9] dark:bg-[#1b5e20]/30 text-[#2e7d32] dark:text-[#81c784] flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-[24px]">smart_toy</span>
                     </div>
-                    <div>
-                        <h3 class="text-xs font-bold text-on-surface">EMedia</h3>
-                        <p class="text-[10px] text-on-surface-variant mt-0.5">Campus Feed</p>
+                    <span class="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest block mb-1">EBots</span>
+                    <h3 class="text-[15px] font-bold text-on-surface leading-tight">Ask EcoAI</h3>
+                </div>
+
+                <div class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-3xl p-5 border border-surface-variant/60 shadow-sm cursor-pointer active:scale-[0.96] transition-transform duration-200" onclick="openApp('/EcoCampus/eforms')">
+                    <div class="w-12 h-12 rounded-2xl bg-[#f3e5f5] dark:bg-[#4a148c]/30 text-[#7b1fa2] dark:text-[#ce93d8] flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-[24px]">description</span>
                     </div>
+                    <span class="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest block mb-1">EForms</span>
+                    <h3 class="text-[15px] font-bold text-[#7b1fa2] dark:text-[#ce93d8] leading-tight">2 Pending</h3>
                 </div>
             </section>
 
         </div>
 
-        <div id="view-profile" class="tab-content">
-            <h2 class="text-2xl font-extrabold text-on-surface mb-6 mt-4">My Profile</h2>
-            <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-surface-variant text-center relative overflow-hidden mb-6">
-                <div class="absolute top-0 left-0 w-full h-24 bg-primary/20"></div>
-                <div class="relative z-10 flex flex-col items-center mt-4">
-                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-surface shadow-sm mb-4 bg-surface-variant">
+        <div id="view-ebots" class="tab-content pt-4">
+            <h2 class="text-2xl font-extrabold text-on-surface mb-2">EBots</h2>
+            <p class="text-sm text-on-surface-variant">Your AI assistants are loading...</p>
+        </div>
+
+        <div id="view-efind" class="tab-content pt-4">
+            <h2 class="text-2xl font-extrabold text-on-surface mb-2">EFind</h2>
+            <p class="text-sm text-on-surface-variant">Discover campus resources...</p>
+        </div>
+
+        <div id="view-profile" class="tab-content pt-4">
+            <h2 class="text-2xl font-extrabold text-on-surface mb-6">My Profile</h2>
+            
+            <div class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-[32px] p-6 shadow-sm border border-surface-variant/60 text-center relative overflow-hidden mb-6">
+                <div class="absolute -top-20 -left-10 w-full h-40 bg-gradient-to-b from-primary/10 to-transparent rounded-full blur-2xl"></div>
+                
+                <div class="relative z-10 flex flex-col items-center mt-2">
+                    <div class="w-24 h-24 rounded-full overflow-hidden border-[4px] border-surface shadow-md mb-4 bg-surface-variant">
                         <img id="profile-avatar-large" alt="User profile" class="w-full h-full object-cover" src="https://via.placeholder.com/150"/>
                     </div>
-                    <h3 id="profile-name" class="text-xl font-bold text-on-surface">Loading...</h3>
-                    <div class="flex items-center gap-2 mt-1 mb-4">
-                        <span id="profile-role" class="bg-primary-container text-on-primary-container text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Student</span>
+                    <h3 id="profile-name" class="text-xl font-extrabold text-on-surface tracking-tight">Loading...</h3>
+                    <div class="flex items-center gap-2 mt-2 mb-5">
+                        <span id="profile-role" class="bg-primary/10 text-primary text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest border border-primary/20">Student</span>
                     </div>
-                    <p id="profile-email" class="text-sm text-on-surface-variant flex items-center gap-1">
+                    <p id="profile-email" class="text-[13px] font-medium text-on-surface-variant flex items-center justify-center gap-1.5 bg-surface-variant/30 px-4 py-2 rounded-xl">
                         <span class="material-symbols-outlined text-[16px]">mail</span> loading...
                     </p>
                 </div>
             </div>
 
-            <div class="bg-surface-container-lowest rounded-2xl border border-surface-variant overflow-hidden mb-6 shadow-sm">
-                <div class="p-4 flex items-center gap-4 border-b border-surface-variant">
-                    <div class="p-2 bg-secondary/10 rounded-lg text-secondary">
-                        <span class="material-symbols-outlined">badge</span>
+            <div class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-[28px] border border-surface-variant/60 overflow-hidden mb-6 shadow-sm">
+                <div class="p-5 flex items-center gap-4 border-b border-surface-variant/50">
+                    <div class="w-10 h-10 bg-secondary/10 rounded-xl text-secondary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[20px]">badge</span>
                     </div>
                     <div>
-                        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Student ID</p>
-                        <p id="profile-id" class="text-sm font-semibold text-on-surface">---</p>
+                        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest mb-0.5">Student ID</p>
+                        <p id="profile-id" class="text-[15px] font-bold text-on-surface">---</p>
                     </div>
                 </div>
-                <div class="p-4 flex items-center gap-4 border-b border-surface-variant">
-                    <div class="p-2 bg-tertiary/10 rounded-lg text-tertiary">
-                        <span class="material-symbols-outlined">menu_book</span>
+                <div class="p-5 flex items-center gap-4">
+                    <div class="w-10 h-10 bg-[#e65100]/10 rounded-xl text-[#e65100] flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[20px]">menu_book</span>
                     </div>
                     <div>
-                        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Course</p>
-                        <p id="profile-course" class="text-sm font-semibold text-on-surface">---</p>
+                        <p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest mb-0.5">Course</p>
+                        <p id="profile-course" class="text-[15px] font-bold text-on-surface">---</p>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-3 mb-8">
-                <div class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-on-surface-variant">dark_mode</span>
-                        <span class="font-semibold text-sm text-on-surface">Dark Theme</span>
+                <div class="w-full bg-surface-container-lowest dark:bg-[#1e1e1e] border border-surface-variant/60 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-8 h-8 rounded-full bg-surface-variant/50 flex items-center justify-center text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">dark_mode</span>
+                        </div>
+                        <span class="font-bold text-[14px] text-on-surface">Dark Theme</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="theme-toggle-switch" class="sr-only peer">
-                        <div class="w-11 h-6 bg-surface-variant rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                        <div class="w-12 h-6 bg-surface-variant/80 rounded-full peer peer-checked:bg-primary transition-colors duration-300 peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all shadow-inner"></div>
                     </label>
                 </div>
 
-                <button class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-on-surface-variant">settings</span>
-                        <span class="font-semibold text-sm text-on-surface">General Settings</span>
+                <button class="w-full bg-surface-container-lowest dark:bg-[#1e1e1e] border border-surface-variant/60 p-4 rounded-2xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-transform duration-200">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-8 h-8 rounded-full bg-surface-variant/50 flex items-center justify-center text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">settings</span>
+                        </div>
+                        <span class="font-bold text-[14px] text-on-surface">General Settings</span>
                     </div>
-                    <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+                    <span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span>
                 </button>
-                <button class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-on-surface-variant">lock_reset</span>
-                        <span class="font-semibold text-sm text-on-surface">Change Password</span>
+                
+                <button class="w-full bg-surface-container-lowest dark:bg-[#1e1e1e] border border-surface-variant/60 p-4 rounded-2xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-transform duration-200">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-8 h-8 rounded-full bg-surface-variant/50 flex items-center justify-center text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">help_center</span>
+                        </div>
+                        <span class="font-bold text-[14px] text-on-surface">Help & Support</span>
                     </div>
-                    <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
-                </button>
-                <button class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-on-surface-variant">info</span>
-                        <span class="font-semibold text-sm text-on-surface">About EcoCampus</span>
-                    </div>
-                    <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
-                </button>
-                <button class="w-full bg-surface-container-low border border-surface-variant p-4 rounded-xl flex items-center justify-between active:scale-[0.98] transition-transform">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-on-surface-variant">help_center</span>
-                        <span class="font-semibold text-sm text-on-surface">Help & Support</span>
-                    </div>
-                    <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+                    <span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span>
                 </button>
 
-                <button onclick="logout()" class="w-full bg-error-container/50 border border-error/20 p-4 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform mt-6">
-                    <span class="material-symbols-outlined text-error">logout</span>
-                    <span class="font-bold text-sm text-error">Sign Out</span>
+                <button onclick="logout()" class="w-full bg-error/10 border border-error/20 p-4 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform mt-8 shadow-sm">
+                    <span class="material-symbols-outlined text-error text-[20px]">logout</span>
+                    <span class="font-bold text-[15px] text-error">Sign Out</span>
                 </button>
             </div>
         </div>
 
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-surface/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-t-3xl border-t-[0.5px] border-surface-variant tonal-shift bg-surface-container-low dark:bg-slate-800 shadow-[0_-4px_32px_rgba(0,0,0,0.04)] z-[40]">
+    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-2 pb-6 pt-3 bg-surface/80 dark:bg-[#121212]/90 backdrop-blur-2xl rounded-t-[32px] border-t border-surface-variant/40 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.2)] z-[40]">
         
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex flex-col items-center justify-center bg-[#006e1c] dark:bg-[#4caf50] text-white rounded-2xl px-4 py-1.5 transition-all active:scale-90 duration-200">
-            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
-            <span class="text-[10px] font-medium font-['Inter'] mt-0.5">Dashboard</span>
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex flex-col items-center justify-center bg-[#006e1c] dark:bg-primary text-white rounded-2xl px-5 py-2 transition-all active:scale-95 duration-200">
+            <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+            <span class="text-[10px] font-bold font-['Inter'] mt-0.5 tracking-wide">Dashboard</span>
         </button>
 
-        <button onclick="switchTab('ebots')" id="nav-ebots" class="nav-item flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
-            <span class="material-symbols-outlined text-[22px]">smart_toy</span>
-            <span class="text-[10px] font-medium font-['Inter'] mt-0.5">EBots</span>
+        <button onclick="switchTab('ebots')" id="nav-ebots" class="nav-item flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:bg-surface-variant/40 rounded-2xl active:scale-95 transition-all duration-200">
+            <span class="material-symbols-outlined text-[24px]">smart_toy</span>
+            <span class="text-[10px] font-bold font-['Inter'] mt-0.5 tracking-wide">EBots</span>
         </button>
 
-        <button onclick="switchTab('efind')" id="nav-efind" class="nav-item flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
-            <span class="material-symbols-outlined text-[22px]">search</span>
-            <span class="text-[10px] font-medium font-['Inter'] mt-0.5">EFind</span>
+        <button onclick="switchTab('efind')" id="nav-efind" class="nav-item flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:bg-surface-variant/40 rounded-2xl active:scale-95 transition-all duration-200">
+            <span class="material-symbols-outlined text-[24px]">search</span>
+            <span class="text-[10px] font-bold font-['Inter'] mt-0.5 tracking-wide">EFind</span>
         </button>
         
-        <button onclick="switchTab('profile')" id="nav-profile" class="nav-item flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform">
-            <span class="material-symbols-outlined text-[22px]">person</span>
-            <span class="text-[10px] font-medium font-['Inter'] mt-0.5">Profile</span>
+        <button onclick="switchTab('profile')" id="nav-profile" class="nav-item flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:bg-surface-variant/40 rounded-2xl active:scale-95 transition-all duration-200">
+            <span class="material-symbols-outlined text-[24px]">person</span>
+            <span class="text-[10px] font-bold font-['Inter'] mt-0.5 tracking-wide">Profile</span>
         </button>
         
     </nav>
