@@ -73,29 +73,23 @@
                         required 
                         class="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium appearance-none text-sm"
                     >
-                        <option value="" disabled selected>Select your College</option>
-                        <option value="Mithibai College">Mithibai College</option>
-                        <option value="Narsee Monjee College">Narsee Monjee College (NM)</option>
-                        <option value="St. Xavier's College">St. Xavier's College</option>
-                        <option value="Jai Hind College">Jai Hind College</option>
-                        <option value="Ruia College">Ramnarain Ruia College</option>
-                        <option value="Podar College">R. A. Podar College</option>
-                        <option value="HR College">H.R. College</option>
-                        <option value="KC College">K.C. College</option>
-                        <option value="Somaiya Vidyavihar">Somaiya Vidyavihar</option>
-                        <option value="Vaze College">V.G. Vaze College (Kelkar)</option>
-                        <option value="SIES College">SIES College</option>
-                        <option value="Bhavans College">Bhavan's College</option>
-                        <option value="Wilson College">Wilson College</option>
-                        <option value="Elphinstone College">Elphinstone College</option>
-                        <option value="National College">R.D. National College</option>
-                        <option value="Sathaye College">Sathaye College</option>
-                        <option value="Dahanukar College">M.L. Dahanukar College</option>
-                        <option value="Ruparel College">D.G. Ruparel College</option>
-                        <option value="KJ Somaiya College">K.J. Somaiya College</option>
-                        <option value="MCC Mulund">Mulund College of Commerce (MCC)</option>
-                        <option value="Other">Other (Not Listed)</option>
-                    </select>
+                        <option value="" disabled selected>Loading Colleges...</option>
+                        </select>
+                </div>
+            </div>
+
+            <div id="other-college-container" class="space-y-1.5 hidden mt-2">
+                <label for="signup-college-other" class="block text-sm font-bold text-gray-800 ml-1">Type College Name</label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i data-lucide="pencil" class="h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="signup-college-other" 
+                        placeholder="Enter your college name" 
+                        class="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium text-sm"
+                    >
                 </div>
             </div>
 
@@ -110,7 +104,7 @@
                         id="signup-fullname" 
                         required 
                         placeholder="John Doe" 
-                        class="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium"
+                        class="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium text-sm"
                     >
                 </div>
             </div>
@@ -220,8 +214,6 @@
                 </div>
             </div>
 
-
-
             <button 
                 type="submit" 
                 id="signup-button" 
@@ -247,8 +239,22 @@
     <script src="signup.js"></script>
     
     <script>
-        // Initialize Icons for the UI
         lucide.createIcons();
+
+        // 🟢 Toggle logic for the "Other" college field
+        const collegeSelect = document.getElementById('signup-college');
+        const otherContainer = document.getElementById('other-college-container');
+        const otherInput = document.getElementById('signup-college-other');
+
+        collegeSelect.addEventListener('change', () => {
+            if (collegeSelect.value === 'Other') {
+                otherContainer.classList.remove('hidden');
+                otherInput.required = true;
+            } else {
+                otherContainer.classList.add('hidden');
+                otherInput.required = false;
+            }
+        });
     </script>
 </body>
 </html>
