@@ -148,17 +148,17 @@
     <!-- MAIN CONTENT -->
     <main class="pt-20 px-5 max-w-screen-md mx-auto relative z-10 pb-6">
         
-        <!-- FEED VIEW (Formerly Dashboard) -->
-        <div id="view-feed" class="tab-content active">
+        <!-- DASHBOARD VIEW (Visually named 'Feed' in nav) -->
+        <div id="view-dashboard" class="tab-content active">
             
-            <!-- STORIES (Instagram Style) -->
+            <!-- HOTPOSTS (Instagram Style Users) -->
             <section class="mb-4">
                 <h3 class="text-[14px] font-bold text-on-surface mb-3 flex items-center gap-1.5">
-                    Stories
+                    <span class="material-symbols-outlined text-[#e65100] text-[18px]">local_fire_department</span> Hotposts
                 </h3>
                 <div class="flex gap-4 overflow-x-auto hide-scrollbar pb-2 pt-1">
                     
-                    <!-- Add Story -->
+                    <!-- Add Hotpost -->
                     <div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer active:scale-95 transition-transform relative">
                         <div class="w-[68px] h-[68px] rounded-full border-[2.5px] border-dashed border-primary/40 flex items-center justify-center bg-primary/5 text-primary">
                             <span class="material-symbols-outlined text-[26px]">add</span>
@@ -221,7 +221,7 @@
             <!-- FEED POSTS -->
             <section class="mt-4">
                 
-                <!-- NEW: Create Post Component -->
+                <!-- Create Post Component -->
                 <div class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-[32px] p-4 border border-surface-variant/60 shadow-sm mb-6 flex gap-3 items-center cursor-pointer active:scale-[0.98] transition-transform">
                     <div class="w-10 h-10 rounded-full border border-surface-variant shadow-sm overflow-hidden shrink-0">
                         <img src="https://via.placeholder.com/150" alt="You" class="w-full h-full object-cover">
@@ -265,7 +265,7 @@
                     </div>
                 </div>
 
-                <!-- NEW: Image/Gallery Post -->
+                <!-- Image/Gallery Post -->
                 <div class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-[32px] p-5 border border-surface-variant/60 shadow-sm mb-5">
                     <!-- User Info -->
                     <div class="flex items-center gap-3 mb-3">
@@ -324,7 +324,6 @@
                     
                     <!-- Poll Options -->
                     <div class="space-y-2.5 mb-4 px-1">
-                        <!-- Option 1 -->
                         <div class="relative w-full bg-surface-variant/30 border border-surface-variant/50 rounded-2xl p-3.5 cursor-pointer overflow-hidden group hover:border-primary/50 transition-colors">
                             <div class="absolute left-0 top-0 bottom-0 bg-primary/20 w-[65%] rounded-r-xl"></div>
                             <div class="relative flex justify-between text-[13px] font-bold text-on-surface z-10">
@@ -338,7 +337,6 @@
                             </div>
                         </div>
                         
-                        <!-- Option 2 -->
                         <div class="relative w-full bg-surface-variant/30 border border-surface-variant/50 rounded-2xl p-3.5 cursor-pointer overflow-hidden group hover:border-primary/50 transition-colors">
                             <div class="absolute left-0 top-0 bottom-0 bg-primary/20 w-[20%] rounded-r-xl hidden group-hover:block opacity-50"></div>
                             <div class="relative flex justify-between text-[13px] font-medium text-on-surface z-10">
@@ -350,7 +348,6 @@
                             </div>
                         </div>
 
-                        <!-- Option 3 -->
                         <div class="relative w-full bg-surface-variant/30 border border-surface-variant/50 rounded-2xl p-3.5 cursor-pointer overflow-hidden group hover:border-primary/50 transition-colors">
                             <div class="absolute left-0 top-0 bottom-0 bg-primary/20 w-[15%] rounded-r-xl hidden group-hover:block opacity-50"></div>
                             <div class="relative flex justify-between text-[13px] font-medium text-on-surface z-10">
@@ -376,7 +373,7 @@
                     </div>
                 </div>
 
-                <!-- NEW: Event/Announcement Post -->
+                <!-- Event/Announcement Post -->
                 <div class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-[32px] p-5 border border-surface-variant/60 shadow-sm mb-5">
                     <!-- User Info -->
                     <div class="flex items-center gap-3 mb-3">
@@ -418,8 +415,8 @@
             </section>
         </div>
 
-        <!-- SEARCH VIEW (2nd Nav Item) -->
-        <div id="view-search" class="tab-content pt-4 hidden">
+        <!-- SEARCH VIEW (Formerly EFind) -->
+        <div id="view-efind" class="tab-content pt-4 hidden">
             <div class="relative mb-6 mt-2">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-on-surface-variant">
                     <span class="material-symbols-outlined text-[20px]">search</span>
@@ -480,7 +477,6 @@
                 </div>
                 <div class="space-y-4">
                     
-                    <!-- Student: Private Account -->
                     <div onclick="openProfileModal('private')" class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-[24px] p-4 border border-surface-variant/60 shadow-sm flex items-center gap-4 cursor-pointer active:scale-[0.98] transition-transform">
                         <div class="relative shrink-0">
                             <div class="w-[52px] h-[52px] rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500">
@@ -498,7 +494,6 @@
                         </button>
                     </div>
 
-                    <!-- Student: Pending Connection -->
                     <div onclick="openProfileModal('private')" class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-[24px] p-4 border border-surface-variant/60 shadow-sm flex items-center gap-4 cursor-pointer active:scale-[0.98] transition-transform">
                         <div class="relative shrink-0">
                             <div class="w-[52px] h-[52px] rounded-full p-[2px] bg-surface-variant">
@@ -516,7 +511,6 @@
                         </button>
                     </div>
 
-                    <!-- Student: Connected / Public -->
                     <div onclick="openProfileModal('public')" class="bg-surface-container-lowest dark:bg-[#1e1e1e] rounded-[24px] p-4 border border-primary/30 shadow-sm flex items-center gap-4 cursor-pointer bg-primary/5 active:scale-[0.98] transition-transform">
                         <div class="relative shrink-0">
                             <div class="w-[52px] h-[52px] rounded-full p-[2px] bg-gradient-to-tr from-primary to-blue-500">
@@ -538,7 +532,7 @@
             </div>
         </div>
 
-        <!-- UPDATES VIEW (3rd Nav Item) -->
+        <!-- UPDATES VIEW -->
         <div id="view-updates" class="tab-content pt-4 hidden">
             <h2 class="text-2xl font-extrabold text-on-surface mb-6">Campus Updates</h2>
             <div class="space-y-4">
@@ -726,7 +720,6 @@
     </main>
 
     <!-- STUDENT PROFILE MODALS (Viewable Overlays) -->
-    
     <div id="modal-profile-private" class="fixed inset-0 z-[110] bg-black/40 backdrop-blur-sm hidden flex-col justify-end transition-opacity duration-300">
         <div class="bg-surface dark:bg-[#1e1e1e] w-full rounded-t-[32px] p-6 pb-12 pt-8 relative animate-[slideUp_0.3s_ease-out]">
             <button onclick="closeProfileModal('private')" class="absolute top-4 right-5 w-8 h-8 bg-surface-variant rounded-full flex items-center justify-center text-on-surface">
@@ -788,31 +781,26 @@
 
     <!-- BOTTOM NAV -->
     <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-2 pb-6 pt-3 bg-surface/80 dark:bg-[#121212]/90 backdrop-blur-2xl rounded-t-[32px] border-t border-surface-variant/40 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.2)] z-[40]">
-        
         <!-- 1. Feed -->
-        <button onclick="switchTab('feed')" id="nav-feed" class="nav-item active flex flex-col items-center justify-center bg-[#006e1c] dark:bg-primary text-white rounded-2xl px-5 py-2 transition-all active:scale-95">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex flex-col items-center justify-center bg-[#006e1c] dark:bg-primary text-white rounded-2xl px-5 py-2 transition-all active:scale-95">
             <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
             <span class="text-[10px] font-bold font-['Inter'] mt-0.5 tracking-wide">Feed</span>
         </button>
-        
         <!-- 2. Search -->
-        <button onclick="switchTab('search')" id="nav-search" class="nav-item flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:bg-surface-variant/40 rounded-2xl active:scale-95">
+        <button onclick="switchTab('efind')" id="nav-efind" class="nav-item flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:bg-surface-variant/40 rounded-2xl active:scale-95">
             <span class="material-symbols-outlined text-[24px]">search</span>
             <span class="text-[10px] font-bold font-['Inter'] mt-0.5 tracking-wide">Search</span>
         </button>
-
         <!-- 3. Updates -->
         <button onclick="switchTab('updates')" id="nav-updates" class="nav-item flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:bg-surface-variant/40 rounded-2xl active:scale-95">
             <span class="material-symbols-outlined text-[24px]">campaign</span>
             <span class="text-[10px] font-bold font-['Inter'] mt-0.5 tracking-wide">Updates</span>
         </button>
-
         <!-- 4. Profile -->
         <button onclick="switchTab('profile')" id="nav-profile" class="nav-item flex flex-col items-center justify-center text-on-surface-variant px-5 py-2 hover:bg-surface-variant/40 rounded-2xl active:scale-95">
             <span class="material-symbols-outlined text-[24px]">person</span>
             <span class="text-[10px] font-bold font-['Inter'] mt-0.5 tracking-wide">Profile</span>
         </button>
-
     </nav>
 
     <!-- INLINE STYLES FOR ANIMATIONS -->
